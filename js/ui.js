@@ -7,6 +7,13 @@
 const ROOT = () => document.body.dataset.root || '';
 const PAGE_ID = () => document.body.dataset.page || 'capa';
 
+/* ---------- PWA offline ---------- */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register(ROOT() + 'service-worker.js').catch(() => {});
+  });
+}
+
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const nf = n => Number(n).toLocaleString('pt-BR');
 const pc = (n,d) => (n/d*100).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';

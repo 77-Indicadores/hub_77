@@ -1,0 +1,20 @@
+{
+  "name": "77 Gestão — Protótipo Bellaria",
+  "short_name": "77 Gestão",
+  "description": "Protótipos navegáveis da plataforma 77 Gestão — apresentação de feira.",
+  "start_url": "index.html",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#08130e",
+  "theme_color": "#08130e",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "assets/logo-77-symbol-color.png",
+      "sizes": "1692x1158",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

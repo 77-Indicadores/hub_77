@@ -8,9 +8,25 @@ Basta abrir `index.html` (duplo clique) — inclusive no tablet.
 
 ## Como apresentar
 
+### Opção A — Copiar a pasta (mais simples)
 1. Copie a pasta inteira para o tablet/notebook.
 2. Abra `index.html`.
 3. Navegue pelos hiperlinks da capa ou pela barra superior.
+
+### Opção B — Instalar como app (PWA), pra abrir com um toque
+O site também é um **PWA instalável**: cacheia tudo no primeiro acesso e depois
+abre com ícone próprio, em tela cheia, **sem internet nenhuma**.
+
+1. Publique este repositório no GitHub Pages (uma vez, com internet).
+2. No celular/tablet, abra o link publicado **uma vez, com internet** —
+   isso baixa e cacheia todos os arquivos.
+3. Android/Chrome: toque em "Adicionar à tela inicial" (aparece sozinho).
+   iPhone/Safari: Compartilhar → Adicionar à Tela de Início.
+4. Depois de instalado, abre pelo ícone e funciona **sem internet**, inclusive
+   em modo avião — ideal pra feira.
+
+> Se trocar qualquer arquivo, suba a versão do cache em
+> `service-worker.js` (`CACHE = 'hub77-v2'`, etc.) pra forçar atualização.
 
 Cada tela é um **canvas fixo de 1280 × 720** (a mesma proporção de uma página
 de relatório do Power BI), que escala sozinho para caber na tela — sem rolagem.
