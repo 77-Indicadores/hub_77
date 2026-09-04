@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Produtos & Estoque — 77 Gestão · Bellaria</title>
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body data-page="produtos" data-root="../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+mountShell();
+
+document.getElementById('app').innerHTML = [
+
+  titleband('PRODUTO · ESTOQUE',
+    'Estoque não é quantidade.',
+    'É dinheiro parado ou venda perdida.',
+    'Cruza o que você tem com a velocidade real de saída: o que vai faltar e o que está encalhado.',
+    ['Ruptura','Cobertura em dias','Sugestão de compra']),
+
+  kpis([
+    {t:'Valor em estoque',      v:'R$ 3,42 mi', s:'2.980 SKUs ativos', c:''},
+    {t:'Capital em baixo giro', v:'R$ 784 mil', d:'22,9%', dir:'down', s:'do estoque total parado', c:'warn'},
+    {t:'SKUs em ruptura',       v:'46', d:'+9', dir:'down', s:'R$ 210 mil de venda em risco', c:'red'},
+    {t:'Cobertura média',       v:'62 dias', s:'o ideal da operação é 35 a 45', c:'blue'}
+  ]),
+
+  `<div class="main m-21">
+    <div class="col">
+      ${panel('Estoque por categoria','Giro saudável × capital parado — R$ mil',
+        chartBars(DB.estoqueCategoria,{values:false, height:210}),
+        {accent:true, legend: legend([['var(--accent)','Saudável'],['rgba(255,255,255,.18)','Baixo giro']])})}
+      ${panel('Sugestão de compra','Por demanda, cobertura e lead time',
+        table(['Produto','Estoque','Demanda/mês','Cobertura','Pedido','Situação'],
+          DB.compras.slice(0,3), [1,2]))}
+    </div>
+    ${panel('Ação imediata','SKUs que exigem decisão hoje',
+      rankList(DB.acaoEstoque.slice(0,4).map(a=>({
+        n: a[4]==='red'?'!':'•', l:a[0], s:a[1], v:a[2], p:a[3], c:a[4]
+      })), false), {accent:true})}
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

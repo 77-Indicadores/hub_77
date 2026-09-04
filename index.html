@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>77 Gestão — Protótipos Bellaria</title>
+<link rel="stylesheet" href="css/base.css">
+</head>
+<body data-page="capa" data-root="">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+
+  <div class="cover">
+    <div class="covertop">
+      <section class="cvleft">
+        <span class="eyebrow"><i class="dot"></i> PLATAFORMA INTEGRADA PARA DISTRIBUIDORAS</span>
+        <h1>Sua operação inteira.<br><em>Em um único lugar.</em></h1>
+        <p>Vendas, metas, positivação, clientes, produtos, estoque, financeiro,
+           equipe de campo e relatório automático no WhatsApp — na mesma base.</p>
+        <div class="cvstats">
+          <div class="cvstat"><small>Faturamento do mês</small><b data-count="4.28" data-dec="2" data-pre="R$ " data-suf=" mi">R$ 0</b><span>+12,4% sobre o ano anterior</span></div>
+          <div class="cvstat"><small>Meta atingida</small><b data-count="90.1" data-dec="1" data-suf="%">0%</b><span>faltam R$ 470 mil</span></div>
+          <div class="cvstat"><small>Clientes positivados</small><b data-count="1286">0</b><span>60,1% da base ativa</span></div>
+          <div class="cvstat"><small>Valor vencido</small><b data-count="728" data-pre="R$ " data-suf=" mil">R$ 0</b><span>10,6% da carteira</span></div>
+        </div>
+      </section>
+      <section class="protos" id="protos"></section>
+    </div>
+
+    <div class="ticker">
+      <div class="tl"><i class="dot"></i> OPERAÇÃO AO VIVO</div>
+      <div class="tt"><div class="tm" id="ticker"></div></div>
+    </div>
+  </div>
+</div></div>
+
+<script src="js/data.js"></script>
+<script src="js/ui.js"></script>
+<script>
+const CARDS = [
+  {id:'vendas',      tag:'COMERCIAL',   ic:'↗',  t:'Vendas',              d:'Faturamento, curva diária, mix por categoria e pedidos em tempo real.'},
+  {id:'metas',       tag:'PERFORMANCE', ic:'◎',  t:'Metas & Ranking',     d:'Meta × realizado, projeção de fechamento e plano de ação.'},
+  {id:'positivacao', tag:'CARTEIRA I',  ic:'⊕',  t:'Positivação I',       d:'Curva ABC, dias sem compra e fila de recuperação.'},
+  {id:'positivacao2',tag:'CARTEIRA II', ic:'⊞',  t:'Positivação II',      d:'Matriz cliente × linha, com semáforo de recompra.'},
+  {id:'clientes',    tag:'BASE',        ic:'☰',  t:'Clientes',            d:'Maiores contas, risco de perda e ficha completa.'},
+  {id:'produtos',    tag:'PRODUTO',     ic:'▦',  t:'Produtos & Estoque',  d:'Ruptura, giro, capital parado e sugestão de compra.'},
+  {id:'financeiro',  tag:'R$',          ic:'R$', t:'Financeiro',          d:'Aging, inadimplência e régua automática de cobrança.'},
+  {id:'cobranca',    tag:'COBRANÇA',    ic:'⚖',  t:'Sistema de Cobrança', d:'Régua automática no WhatsApp, com boleto, PIX e acordo.'},
+  {id:'app1',        tag:'APP I',       ic:'⌖',  t:'App de Promotoras',   d:'Agenda, check-in por GPS, checklist e leitor de código.'},
+  {id:'app2',        tag:'APP II',      ic:'◧',  t:'App do Representante',d:'Carteira, pedido offline, crédito e comissão no bolso.'},
+  {id:'relatorios',  tag:'AUTOMAÇÃO',   ic:'✉',  t:'Relatório WhatsApp',  d:'11 modelos automáticos, no horário certo, para cada cargo.'}
+];
+
+document.getElementById('protos').innerHTML = CARDS.map(c=>{
+  const p = PAGES.find(x=>x.id===c.id);
+  return `<a class="proto" href="${p.file}" style="--g-accent:var(${p.grad})">
+    <span class="tg">${c.tag}</span>
+    <div class="pi">${c.ic}</div>
+    <h3>${c.t}</h3>
+    <p>${c.d}</p>
+    <span class="go">Abrir →</span>
+  </a>`;
+}).join('');
+
+const one = DB.eventos.map(([t,c])=>`<span class="ev"><em class="${c}"></em><b>${t}</b></span>`).join('');
+document.getElementById('ticker').innerHTML = one + one;
+
+function countUp(el){
+  const target = parseFloat(el.dataset.count);
+  const dec = +(el.dataset.dec||0), pre = el.dataset.pre||'', suf = el.dataset.suf||'';
+  const t0 = performance.now(), dur = 1500;
+  const step = now => {
+    const k = Math.min(1,(now-t0)/dur), e = 1-Math.pow(1-k,3);
+    el.textContent = pre + (target*e).toLocaleString('pt-BR',{minimumFractionDigits:dec,maximumFractionDigits:dec}) + suf;
+    if(k<1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+mountShell();
+document.querySelectorAll('[data-count]').forEach(countUp);
+</script>
+</body>
+</html>

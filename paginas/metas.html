@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Metas & Ranking — 77 Gestão · Bellaria</title>
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body data-page="metas" data-root="../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+mountShell();
+
+const pct = v => v[2]/v[3]*100;
+const ord = [...DB.vendedores].sort((a,b)=>pct(b)-pct(a));
+
+document.getElementById('app').innerHTML = [
+
+  titleband('PERFORMANCE · METAS',
+    'A meta não é surpresa',
+    'no último dia do mês.',
+    'Projeção recalculada todo dia pelo ritmo real. Quando o time sai da rota, o alerta chega antes.',
+    ['Projeção diária','Gap em reais','Plano de ação']),
+
+  kpis([
+    {t:'Meta do mês', v:DB.geral.meta, s:'por vendedor, região e linha', c:''},
+    {t:'Realizado',   v:DB.geral.faturamentoMes, d:'90,1%', dir:'up', s:'faltam R$ 470 mil', c:'violet'},
+    {t:'Projeção de fechamento', v:'R$ 4,69 mi', d:'98,7%', dir:'down', s:'no ritmo atual não fecha', c:'warn'},
+    {t:'Vendedores na meta', v:'3 de 8', s:'5 com plano de ação aberto', c:'red'}
+  ]),
+
+  `<div class="main m-21">
+    ${panel('Meta × realizado por vendedor','R$ mil no mês corrente',
+      chartBars(ord.map(v=>[v[0].split(' ')[0], v[2], v[3]]),{values:false, height:300}),
+      {accent:true, legend: legend([['var(--accent)','Realizado'],['rgba(255,255,255,.18)','Meta']])})}
+    <div class="col">
+      ${panel('Atingimento do time','Realizado sobre a meta',
+        gauge(90.1,'90,1%','R$ 4,28 mi de R$ 4,75 mi'), {center:true})}
+      ${panel('Ranking do mês','% da meta atingida',
+        rankList(ord.slice(0,2).map((v,i)=>({
+          n:i+1, l:v[0], s:v[1],
+          v:pct(v).toFixed(1).replace('.',',')+'%', p:Math.min(100,pct(v)),
+          c: pct(v)>=100?'good':pct(v)>=90?'warn':'red'
+        })), true))}
+    </div>
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

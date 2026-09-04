@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sistema de Cobrança — 77 Gestão · Bellaria</title>
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body data-page="cobranca" data-root="../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+mountShell();
+
+const waFmt = s => esc(s)
+  .replace(/\*([^*\n]+)\*/g,'<b>$1</b>')
+  .replace(/_([^_\n]+)_/g,'<i>$1</i>');
+
+function conversa(titulo, sub, msgs, rodape){
+  return `<div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="scr-top">
+        <div class="av">B</div>
+        <div><b>${titulo}</b><small>${sub}</small></div>
+      </div>
+      <div class="scr-body wa">
+        <div class="daytag">HOJE</div>
+        ${msgs.map(m=>{
+          const deles = m[0]==='cli';
+          const tick = deles ? '' : ' <i class="ck">✓✓</i>';
+          return `<div class="bubble${deles?' deles':''}">${waFmt(m[1])}<span class="tm">${m[2]}${tick}</span></div>`;
+        }).join('')}
+      </div>
+      <div class="scr-foot"><div class="fake">${rodape}</div><div class="snd">➤</div></div>
+    </div>
+  </div>`;
+}
+
+const tela1 = conversa('Lembrete prévio','3 dias antes do vencimento',[
+  ['bot',`Olá, *Salão Studio Vogue*! 👋
+Aqui é a *Bellaria Distribuidora*.
+
+Passando só para lembrar que você tem um boleto vencendo em *3 dias*:
+
+📄 Nota 48209
+💰 *R$ 3.180,00*
+📅 Vence em *31/08*
+
+Se já pagou, é só desconsiderar 🙂
+Precisa da 2ª via? Responda *BOLETO*.`,'09:02'],
+  ['cli','Manda o boleto por favor','09:14'],
+  ['bot',`Claro! Segue a 2ª via 👇
+
+📎 boleto-48209.pdf
+🔢 PIX copia e cola disponível
+📅 Vencimento: 31/08
+
+Qualquer dúvida é só chamar.`,'09:14']
+],'84 lembretes enviados hoje');
+
+const tela2 = conversa('Aviso de vencimento','No dia do vencimento',[
+  ['bot',`*Cosmétika Norte*, bom dia!
+
+Seu boleto vence *hoje*:
+
+📄 Nota 47812
+💰 *R$ 8.240,00*
+📅 Vencimento: *hoje, 29/08*
+
+Pagando até as 20h não há acréscimo.
+Responda *PIX* para receber o código.`,'08:30'],
+  ['cli','PIX','10:41'],
+  ['bot',`Aqui está 👇
+
+🔢 *00020126580014BR.GOV.BCB.PIX...*
+💰 R$ 8.240,00
+
+Assim que cair, a baixa é automática no sistema. 👍`,'10:41']
+],'37 avisos enviados hoje');
+
+const tela3 = conversa('Escalonamento','30 dias de atraso',[
+  ['bot',`*Rede Beleza Total*, tudo bem?
+
+Identificamos *6 títulos em aberto*:
+
+💰 Total: *R$ 128.400,00*
+⏳ Maior atraso: *94 dias*
+🔒 Compras bloqueadas desde 12/07
+
+Queremos destravar sua conta. Podemos parcelar em até *6x*.
+
+Responda *ACORDO* que eu já simulo.`,'09:00'],
+  ['cli','Consegue em 6x?','11:22'],
+  ['bot',`Consigo sim ✅
+
+📄 6x de *R$ 21.400,00*
+📅 1ª parcela em 05/09
+🔓 Bloqueio liberado na 1ª parcela
+
+Simulação enviada ao seu gerente, Marina Reis. Ela confirma hoje.`,'11:23']
+],'6 escalonamentos hoje');
+
+document.getElementById('app').innerHTML = [
+
+  titleband('SISTEMA DE COBRANÇA · WHATSAPP',
+    'A régua cobra sozinha.',
+    'Todo dia, sem ninguém lembrar.',
+    'Lembrete antes, aviso no dia, cobrança depois e escalonamento — com boleto, PIX, acordo e baixa automática no ERP.',
+    ['Régua automática','Boleto e PIX','Acordo e parcelamento']),
+
+  kpis([
+    {t:'Recuperado no mês', v:'R$ 396 mil', d:'+31%', dir:'up', s:'sem ninguém a mais na equipe', c:'good'},
+    {t:'Disparos hoje',     v:'175', s:'em 6 etapas da régua', c:''},
+    {t:'Taxa de resposta',  v:'68%', d:'+14 p.p.', dir:'up', s:'contra 9% da cobrança por e-mail', c:'blue'},
+    {t:'Acordos fechados',  v:'23', d:'+8', dir:'up', s:'R$ 214 mil renegociados', c:'warn'}
+  ]),
+
+  `<div class="main m-4" style="grid-template-columns:repeat(4,1fr)">
+    ${panel('1 · Lembrete prévio','3 dias antes do vencimento', tela1, {accent:true})}
+    ${panel('2 · Aviso de vencimento','No dia, com PIX na hora', tela2, {accent:true})}
+    ${panel('3 · Escalonamento','30 dias · proposta de acordo', tela3, {accent:true})}
+    <div class="col a">
+      ${panel('Etapas da régua','Disparos nas últimas 24 h',
+        rankList(DB.regua.map((r,i)=>({
+          n:i+1, l:r[0], s:r[1], v:r[3], c: i>=4?'red' : i===3?'warn':'good'
+        })), true).replace('class="rank"','class="rank tight"'))}
+      ${panel('Recuperação mês a mês','Valor recuperado pela régua — R$ mil',
+        chartLine(DB.recebimento,{zero:false, height:250}))}
+    </div>
+  </div>`
+
+].join('');
+
+vidaNasConversas();
+</script>
+</body>
+</html>

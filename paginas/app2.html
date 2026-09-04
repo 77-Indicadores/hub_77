@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>App II — Representante · 77 Gestão · Bellaria</title>
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body data-page="app2" data-root="../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+mountShell();
+
+function fone(titulo, sub, corpo, rodape, sigla){
+  return `<div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="scr-top">
+        <div class="av">${sigla||'MR'}</div>
+        <div><b>${titulo}</b><small>${sub}</small></div>
+      </div>
+      <div class="scr-body">${corpo}</div>
+      <div class="scr-foot"><div class="fake">${rodape}</div><div class="snd">→</div></div>
+    </div>
+  </div>`;
+}
+
+/* 1 — carteira do dia */
+const carteira = [
+  ['Bella Hair Cosméticos','A','comprou há 2 dias','ok'],
+  ['Grupo Essenza Beauty','A','no ponto de recompra','agora'],
+  ['Hair Box Profissional','A','15 dias sem pedido','alerta'],
+  ['Perfumaria Bella','B','comprou há 9 dias','ok'],
+  ['Salão Studio Vogue','B','21 dias sem pedido','alerta'],
+  ['Rede Beleza Total','A','83 dias · bloqueado','risco'],
+  ['Cosmétika Norte','B','62 dias sem pedido','risco']
+];
+const cor = {ok:'#5ff2a8',agora:'#8dffb8',alerta:'#ffc45c',risco:'#ff9d9d'};
+const ico = {ok:'✓',agora:'★',alerta:'!',risco:'▲'};
+
+const tela1 = fone('Minha carteira','Marina Reis · Sudeste',
+  `<div class="appcard">
+     <div class="hd"><b>Positivação do mês</b><span>214 de 246</span></div>
+     <div class="big" style="color:#5ff2a8">87%</div>
+     <div class="track" style="margin-top:6px"><i style="width:87%"></i></div>
+     <div class="li">32 clientes ainda sem comprar</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Prioridade de hoje</b><span>7 clientes</span></div>
+   </div>` +
+  carteira.map(([n,c,d,s])=>`
+    <div class="appcard" style="padding:7px 10px">
+      <div class="hd">
+        <b style="font-size:10.5px"><span style="color:${cor[s]}">${ico[s]}</span> ${n}</b>
+        <span style="font-weight:800">${c}</span>
+      </div>
+      <div class="li" style="font-size:9.5px;margin-top:3px">${d}</div>
+    </div>`).join(''),
+  'Abrir cliente');
+
+/* 2 — catálogo e pedido */
+const tela2 = fone('Novo pedido','Grupo Essenza Beauty',
+  `<div class="appcard">
+     <div class="hd"><b>Catálogo por linha</b><span>6 linhas</span></div>
+     <div class="li">Progressiva · Coloração · Tratamento</div>
+     <div class="li">Unhas · Skincare · Barbearia</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Progressiva Orgânica 1L</b><span>cx 12</span></div>
+     <div class="li">Tabela: R$ 89,90 · <b style="color:#ffc45c">estoque baixo</b></div>
+     <div class="li">Qtd: <b>24 un.</b> &nbsp; Desconto: <b>8%</b></div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Máscara Reconstrutora</b><span>cx 6</span></div>
+     <div class="li">Tabela: R$ 62,00</div>
+     <div class="li">Qtd: <b>18 un.</b> &nbsp; Desconto: <b>5%</b></div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>💡 Sugestão da 77</b><span>mix</span></div>
+     <div class="li">Este cliente não compra <b>Perfumaria</b></div>
+     <div class="li" style="color:#5ff2a8">Clientes do mesmo perfil levam R$ 5,8 mil/mês</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Estoque em tempo real</b><span>CD</span></div>
+     <div class="li" style="color:#ffc45c">Oxidante 30 vol — sem estoque</div>
+   </div>`,
+  '4 itens · R$ 8.420,00');
+
+/* 3 — fechamento do pedido */
+const tela3 = fone('Fechar pedido','Condição e limite',
+  `<div class="appcard">
+     <div class="hd"><b>Resumo</b><span>4 itens</span></div>
+     <div class="li">Subtotal &nbsp;&nbsp; <b>R$ 9.140,00</b></div>
+     <div class="li">Desconto (7,9%) &nbsp;&nbsp; <b style="color:#ffc45c">− R$ 720,00</b></div>
+     <div class="big" style="color:#5ff2a8">R$ 8.420,00</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Condição de pagamento</b><span>28/35/42</span></div>
+     <div class="li">3 parcelas de R$ 2.806,67</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Limite de crédito</b><span>aprovado</span></div>
+     <div class="track" style="margin-top:6px"><i style="width:46%"></i></div>
+     <div class="li">Usa R$ 8,4 mil de R$ 18 mil disponíveis</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Minha comissão</b><span>neste pedido</span></div>
+     <div class="li" style="color:#5ff2a8">R$ 336,80 (4%)</div>
+     <div class="li">Cai para 2,8% se o desconto passar de 12%</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Sem internet?</b><span>modo offline</span></div>
+     <div class="li" style="color:#5ff2a8">Pedido salvo · envia quando o sinal voltar</div>
+   </div>`,
+  'Enviar pedido ao ERP');
+
+/* 4 — meta, comissão e tarefas */
+const tela4 = fone('Minha meta','Agosto · comissão',
+  `<div class="appcard">
+     <div class="hd"><b>Meta do mês</b><span>106,8%</span></div>
+     <div class="big" style="color:#5ff2a8">R$ 812 mil</div>
+     <div class="track" style="margin-top:6px"><i style="width:100%"></i></div>
+     <div class="li">Meta: R$ 760 mil · bateu em 26/08</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Comissão prevista</b><span>a receber</span></div>
+     <div class="li" style="color:#5ff2a8">R$ 32.480,00</div>
+     <div class="li">+ bônus de superação: R$ 2.080,00</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>🏆 Ranking</b><span>1º de 8</span></div>
+     <div class="li">2º Carlos Mendes — 102,2%</div>
+     <div class="li">3º Paula Antunes — 100,5%</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>✓ Minhas tarefas</b><span>3 abertas</span></div>
+     <div class="li" style="color:#ffc45c">Recuperar 12 clientes curva A · hoje</div>
+     <div class="li">Negociar acordo — Rede Beleza Total</div>
+     <div class="li">Levar mix de Perfumaria ao Essenza</div>
+   </div>`,
+  'Ver extrato de comissão','MR');
+
+document.getElementById('app').innerHTML = [
+
+  titleband('APP II · REPRESENTANTE COMERCIAL',
+    'O pedido sai do cliente',
+    'direto para o ERP.',
+    'Carteira, catálogo por linha, estoque em tempo real, limite de crédito, comissão e tarefas — no bolso do vendedor.',
+    ['Pedido offline','Limite e comissão','Sugestão de mix']),
+
+  kpis([
+    {t:'Pedidos pelo app',  v:'78%', d:'+21 p.p.', dir:'up', s:'dos pedidos do mês', c:'good'},
+    {t:'Tempo por pedido',  v:'4 min', d:'-63%', dir:'up', s:'antes: 11 min por telefone', c:'blue'},
+    {t:'Erro de digitação', v:'0,4%', d:'-3,1 p.p.', dir:'up', s:'pedido entra direto no ERP', c:'good'},
+    {t:'Ticket pelo app',   v:'R$ 2.612', d:'+12%', dir:'up', s:'sugestão de mix eleva o pedido', c:'warn'}
+  ]),
+
+  `<div class="main m-4">
+    ${panel('1 · Minha carteira','Positivação e prioridade do dia', tela1, {accent:true})}
+    ${panel('2 · Catálogo e pedido','Preço, estoque e sugestão de mix', tela2, {accent:true})}
+    ${panel('3 · Fechamento','Condição, crédito e comissão', tela3, {accent:true})}
+    ${panel('4 · Meta e tarefas','Ranking, comissão e ações', tela4, {accent:true})}
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Positivação — 77 Gestão · Bellaria</title>
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body data-page="positivacao" data-root="../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+mountShell();
+
+const faixaRot = {'0-30d':['good','0-30d'],'31-60d':['blue','31-60d'],
+                  '61-90d':['warn','61-90d'],'+90d':['red','+90d']};
+
+document.getElementById('app').innerHTML = [
+
+  titleband('CARTEIRA · POSITIVAÇÃO',
+    'Quem comprou, quem parou',
+    'e há quanto tempo.',
+    'Carteira classificada por curva ABC e faixa de dias sem compra — com o detalhe cliente a cliente.',
+    ['Curva ABC','Dias sem compra','Fila de recuperação']),
+
+  kpis([
+    {t:'Base de clientes', v:'2.140', s:'cadastrados no ERP', c:''},
+    {t:'Positivados no mês', v:'1.286', d:'60,1%', dir:'up', s:'+3,4 p.p. sobre o mês anterior', c:'good'},
+    {t:'Sem compra há 60+ dias', v:'318', d:'+22', dir:'down', s:'R$ 612 mil de potencial parado', c:'red'},
+    {t:'Novos clientes', v:'74', d:'+21', dir:'up', s:'melhor mês do semestre', c:'blue'}
+  ]),
+
+  `<div class="main m-abc">
+    ${panel('Dias sem compra','Clientes ativos: 2.006 (base 365 dias)', faixasCard(), {accent:true})}
+    ${panel('Distribuição por curva ABC','Dias sem compra dentro de cada curva',
+      curvaStack(), {legend: legend([['#45e594','0-30d'],['#6ea8ff','31-60d'],['#ffc45c','61-90d'],['#ff7b7b','+90d']])})}
+    ${panel('Detalhe por cliente','Ordenado por faixa de dias sem compra',
+      table(['Cliente','Total mês','Curva','Dias s/ compra','Faixa'],
+        DB.clientesFaixa.slice(0,8).map(c=>[
+          c[0], nf(c[1]), c[2], nf(c[3]), [faixaRot[c[4]][0], faixaRot[c[4]][1]]
+      ]), [1,3]),
+    {accent:true})}
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>App I — Promotoras · 77 Gestão · Bellaria</title>
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body data-page="app1" data-root="../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+mountShell();
+
+function fone(titulo, sub, corpo, rodape, sigla){
+  return `<div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+      <div class="scr-top">
+        <div class="av">${sigla||'AC'}</div>
+        <div><b>${titulo}</b><small>${sub}</small></div>
+      </div>
+      <div class="scr-body">${corpo}</div>
+      <div class="scr-foot"><div class="fake">${rodape}</div><div class="snd">→</div></div>
+    </div>
+  </div>`;
+}
+
+/* 1 — agenda do dia */
+const agenda = [
+  ['Perfumaria Bella — Loja 4','09:00','ok','visita concluída'],
+  ['Rede Beleza Total — Centro','09:45','ok','visita concluída'],
+  ['Farmácia Estética Vida','10:20','alerta','ruptura registrada'],
+  ['Salão Studio Vogue','10:50','alerta','preço fora da tabela'],
+  ['Bella Hair Cosméticos','11:30','agora','em andamento'],
+  ['Empório da Beleza','13:15','prox','a caminho'],
+  ['Nail Concept','14:40','prox','agendada'],
+  ['Hair Box Profissional','16:00','prox','agendada']
+];
+const cor = {ok:'#5ff2a8',alerta:'#ffc45c',agora:'#8dffb8',prox:'#8ba398'};
+const ico = {ok:'✓',alerta:'!',agora:'▶',prox:'○'};
+
+const tela1 = fone('Agenda de hoje','Aline Costa · Zona Sul',
+  `<div class="appcard">
+     <div class="hd"><b>Roteiro do dia</b><span>5 de 8</span></div>
+     <div class="track" style="margin-top:8px"><i style="width:62%"></i></div>
+     <div class="li">12,4 km previstos · próxima em 1,4 km</div>
+   </div>` +
+  agenda.map(([n,h,s,d])=>`
+    <div class="appcard" style="padding:7px 10px">
+      <div class="hd">
+        <b style="font-size:10.5px"><span style="color:${cor[s]}">${ico[s]}</span> ${n}</b>
+        <span>${h}</span>
+      </div>
+      <div class="li" style="font-size:9.5px;margin-top:3px">${d}</div>
+    </div>`).join(''),
+  'Iniciar próxima visita');
+
+/* 2 — check-in e checklist */
+const tela2 = fone('Visita em curso','Bella Hair Cosméticos',
+  `<div class="appcard">
+     <div class="hd"><b>Check-in por GPS</b><span>11:32</span></div>
+     <div class="track" style="margin-top:8px"><i style="width:100%"></i></div>
+     <div class="li">Validado · 12 m do ponto cadastrado</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Checklist da visita</b><span>4 de 6</span></div>
+     <div class="li">✅ Foto da gôndola</div>
+     <div class="li">✅ Pesquisa de preço</div>
+     <div class="li">✅ Conferência de ruptura</div>
+     <div class="li">✅ Material de PDV</div>
+     <div class="li" style="color:#8ba398">○ Share de gôndola</div>
+     <div class="li" style="color:#8ba398">○ Assinatura do responsável</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Foto da gôndola</b><span>2 arquivos</span></div>
+     <div class="shots"><div class="shot">ANTES</div><div class="shot">DEPOIS</div></div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>⚠ Ruptura</b><span>1 SKU</span></div>
+     <div class="li" style="color:#ffc45c">Oxidante 30 vol 900ml</div>
+     <div class="li" style="color:#5ff2a8">Alerta enviado a Compras</div>
+   </div>`,
+  'Finalizar visita');
+
+/* 3 — venda com leitor de código */
+const tela3 = fone('Registrar venda','Leitor de código de barras',
+  `<div class="appcard" style="text-align:center">
+     <div class="li" style="font-size:10px">APONTE PARA O CÓDIGO</div>
+     <div class="shot" style="height:96px;margin-top:8px;border-color:rgba(69,229,148,.4)">▤▤▤ 789 1234 5678 9 ▤▤▤</div>
+     <div class="li" style="color:#5ff2a8;margin-top:7px">Progressiva Orgânica 1L · lida</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Itens lidos</b><span>4 SKUs</span></div>
+     <div class="li">Progressiva Orgânica 1L &nbsp; <b>12 un.</b></div>
+     <div class="li">Máscara Reconstrutora &nbsp; <b>8 un.</b></div>
+     <div class="li">Tintura 6.0 Louro &nbsp; <b>24 un.</b></div>
+     <div class="li">Esmalte gel &nbsp; <b>18 un.</b></div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Venda da loja hoje</b><span>sell-out</span></div>
+     <div class="big">R$ 4.860</div>
+     <div class="li">62 unidades · média R$ 78,40</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Sem sinal na loja?</b><span>modo offline</span></div>
+     <div class="li" style="color:#5ff2a8">Salvo no aparelho · sincroniza sozinho</div>
+   </div>`,
+  'Enviar venda');
+
+/* 4 — meta, premiação e comunicados */
+const tela4 = fone('Minha meta','Agosto · premiação',
+  `<div class="appcard">
+     <div class="hd"><b>Meta de execução</b><span>98%</span></div>
+     <div class="big" style="color:#5ff2a8">98%</div>
+     <div class="track" style="margin-top:6px"><i style="width:98%"></i></div>
+     <div class="li">96 visitas · 0 pendências</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>🏆 Premiação do mês</b><span>2º lugar</span></div>
+     <div class="li">Faltam <b>3 visitas</b> para o 1º lugar</div>
+     <div class="li" style="color:#ffc45c">Bônus previsto: R$ 480,00</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>📣 Comunicados</b><span>2 novos</span></div>
+     <div class="li">Nova campanha de progressiva — 15/09</div>
+     <div class="li">Material de PDV chega quarta</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Afastamento</b><span>solicitar</span></div>
+     <div class="li">Férias, folga ou atestado pelo próprio app</div>
+   </div>
+   <div class="appcard">
+     <div class="hd"><b>Custo da agenda</b><span>reembolso</span></div>
+     <div class="li">R$ 186,40 em deslocamento no mês</div>
+   </div>`,
+  'Ver ranking completo','AC');
+
+document.getElementById('app').innerHTML = [
+
+  titleband('APP I · PROMOTORAS E TRADE',
+    'A loja na mão de quem',
+    'está dentro dela.',
+    'Agenda, check-in por GPS, checklist, leitura de código de barras, meta, premiação e comunicados — funcionando sem sinal.',
+    ['Agenda e roteiro','Scanner de venda','Modo offline']),
+
+  kpis([
+    {t:'Execução no PDV',  v:'92%', d:'+5 p.p.', dir:'up', s:'checklist completo em loja', c:'good'},
+    {t:'Visitas no mês',   v:'1.284', s:'em 486 pontos de venda', c:''},
+    {t:'Promotoras ativas',v:'38', s:'em 6 regiões', c:'blue'},
+    {t:'Sell-out lido',    v:'R$ 612 mil', d:'+18%', dir:'up', s:'venda registrada na loja', c:'warn'}
+  ]),
+
+  `<div class="main m-4">
+    ${panel('1 · Agenda do dia','Roteiro, distância e status', tela1, {accent:true})}
+    ${panel('2 · Visita em curso','Check-in, checklist e evidência', tela2, {accent:true})}
+    ${panel('3 · Venda no PDV','Leitor de código e sell-out', tela3, {accent:true})}
+    ${panel('4 · Meta e premiação','Ranking, comunicado e afastamento', tela4, {accent:true})}
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Clientes — 77 Gestão · Bellaria</title>
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body data-page="clientes" data-root="../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+mountShell();
+
+document.getElementById('app').innerHTML = [
+
+  titleband('BASE · CLIENTES',
+    'Cada cliente com histórico,',
+    'mix e risco na mesma tela.',
+    'O vendedor abre a conta e já sabe o que oferecer, o que cobrar e o que o cliente parou de comprar.',
+    ['Curva ABC','Risco de perda','Mix por cliente']),
+
+  kpis([
+    {t:'Base total',        v:'2.140', s:'clientes cadastrados e ativos', c:''},
+    {t:'Clientes curva A',  v:'214',   s:'10% da base = 70% do faturamento', c:'blue'},
+    {t:'Ticket médio',      v:'R$ 2.324', d:'+4,9%', dir:'up', s:'por pedido emitido', c:'good'},
+    {t:'Em risco de perda', v:'46', d:'+11', dir:'down', s:'curva A e B parados há 60+ dias', c:'red'}
+  ]),
+
+  `<div class="main m-21">
+    ${panel('Maiores clientes da base','Por média mensal — com vencido em aberto e risco',
+      table(['Cliente','Curva','Região','Média mensal','Vencido','Última compra','Situação'],
+        DB.topClientes, [3]), {accent:true})}
+    <div class="col">
+      ${panel('Curva ABC da carteira','Concentração do faturamento',
+        donut(DB.curvaABC,'214','CLIENTES CURVA A'), {center:true})}
+      ${panel('Contas que exigem atenção','Cruzamento de carteira com financeiro',
+        insights([
+          {t:'2 contas curva A travadas por crédito', tone:'red', ic:'🔒',
+           txt:'Rede Beleza Total e Distribuidora Charme: R$ 60,5 mil/mês de compra parada por bloqueio automático.'},
+          {t:'Hair Box passou do ponto de recompra', tone:'warn', ic:'⏰',
+           txt:'Compra a cada 14 dias; hoje é o 15º. R$ 19,6 mil ainda recuperáveis no mês.'}
+        ]))}
+    </div>
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

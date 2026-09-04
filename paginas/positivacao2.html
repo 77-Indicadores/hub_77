@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Positivação II — 77 Gestão · Bellaria</title>
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body data-page="positivacao2" data-root="../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page nokpi" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+mountShell();
+
+const SIM = {R:['●','st-r','Recente'], P:['▲','st-p','Recompra'], N:['■','st-n','Sem compra']};
+
+/* resumo por linha: quantos clientes em cada status */
+function resumoLinhas(){
+  return `<section class="resumolinhas">` + DB.linhas.map(([,rot],i)=>{
+    const col = DB.carteiraLinhas.map(c=>c[5][i][0]);
+    const r = col.filter(s=>s==='R').length,
+          p = col.filter(s=>s==='P').length,
+          n = col.filter(s=>s==='N').length;
+    return `<div class="rl">
+      <b>${esc(rot)}</b>
+      <div class="tri">
+        <div><i class="st-r">●</i><b>${r}</b><small>recente</small></div>
+        <div><i class="st-p">▲</i><b>${p}</b><small>recompra</small></div>
+        <div><i class="st-n">■</i><b>${n}</b><small>nunca</small></div>
+      </div>
+    </div>`;
+  }).join('') + `</section>`;
+}
+
+function matriz(filtro){
+  const linhas = DB.carteiraLinhas.slice(0,10).filter(c =>
+    filtro === 'T' ? true : c[5].some(x => x[0] === filtro));
+
+  const head = `<tr>
+    <th class="l">Cliente</th><th class="l">Vendedor</th><th>Curva</th>
+    ${DB.linhas.map(l=>`<th>${esc(l[1])}</th>`).join('')}
+  </tr>`;
+
+  const body = linhas.map(([cid,cod,nome,vend,curva,cels])=>`
+    <tr>
+      <td class="l"><span>${esc(cid)} · ${esc(cod)} · </span><b>${esc(nome)}</b></td>
+      <td class="l" style="font-size:10.5px;color:#9db2a7">${esc(vend)}</td>
+      <td><span class="cv ${curva}">${curva}</span></td>
+      ${cels.map(([s,d])=>{
+        const [sim,cls] = SIM[s];
+        return `<td class="cel"><i class="${cls}">${sim}</i><span>${d||'—'}</span></td>`;
+      }).join('')}
+    </tr>`).join('');
+
+  return {html:`<table class="matriz"><thead>${head}</thead><tbody>${body}</tbody></table>`, n:linhas.length};
+}
+
+let filtroAtual = 'T';
+
+function barraFiltro(n){
+  const ops = [['T','Todos'],['N','Sem compra'],['P','Recompra'],['R','Recente']];
+  return `<div class="filtros">
+    ${ops.map(([k,r])=>`<button class="${k===filtroAtual?'on':''}" onclick="filtrar('${k}')">${r}</button>`).join('')}
+    <span class="cnt">${n} de ${DB.carteiraLinhas.length} clientes</span>
+  </div>`;
+}
+
+function render(){
+  const m = matriz(filtroAtual);
+  document.getElementById('app').innerHTML = [
+    titleband('CARTEIRA · POSITIVAÇÃO POR LINHA',
+      'Não é só se o cliente comprou.',
+      'É o que ele deixou de comprar.',
+      'Cada cliente contra cada linha do portfólio: comprou recente, está na hora da recompra ou nunca levou.',
+      ['Cliente × linha','Semáforo de status','Data da última compra']),
+    resumoLinhas(),
+    `<div class="main">
+      ${panel('Positivação por cliente e linha de produto','● até 60 dias · ▲ mais de 60 dias · ■ nunca comprou',
+        m.html, {accent:true, legend: barraFiltro(m.n)})}
+    </div>`
+  ].join('');
+}
+
+function filtrar(k){ filtroAtual = k; render(); }
+
+render();
+</script>
+</body>
+</html>

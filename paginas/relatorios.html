@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Relatório no WhatsApp — 77 Gestão · Bellaria</title>
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body data-page="relatorios" data-root="../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+mountShell();
+
+const waFmt = s => esc(s)
+  .replace(/\*([^*\n]+)\*/g,'<b>$1</b>')
+  .replace(/_([^_\n]+)_/g,'<i>$1</i>');
+
+document.getElementById('app').innerHTML = [
+
+  titleband('AUTOMAÇÃO · RELATÓRIO NO WHATSAPP',
+    'O indicador vai até o gestor.',
+    'Não o contrário.',
+    'Onze modelos prontos: uns por agenda fixa, outros disparados por gatilho de indicador.',
+    ['11 modelos','Público por cargo','Disparo por gatilho']),
+
+  kpis([
+    {t:'Modelos disponíveis',   v:'11', s:'prontos para ativar hoje', c:''},
+    {t:'Relatórios enviados',   v:'1.284', d:'+38%', dir:'up', s:'no mês corrente', c:'good'},
+    {t:'Taxa de leitura',       v:'94%', s:'contra 31% do relatório por e-mail', c:'blue'},
+    {t:'Tempo até a informação',v:'0 min', s:'antes: 1 dia útil de espera', c:'good'}
+  ]),
+
+  `<div class="main m-phone">
+    ${panel('Como chega no celular','Toque em um modelo ao lado',
+      `<div class="phone">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="scr-top">
+            <div class="av">B</div>
+            <div><b>77 Gestão · Bellaria</b><small>online — conta oficial</small></div>
+          </div>
+          <div class="scr-body wa" id="waBody"></div>
+          <div class="scr-foot"><div class="fake">Mensagem</div><div class="snd">➤</div></div>
+        </div>
+      </div>`, {accent:true})}
+
+    ${panel('11 modelos prontos','Horário, público e gatilho próprios', `<div class="tpls duas" id="tpls"></div>`)}
+
+  </div>`
+
+].join('');
+
+let atual = 0;
+
+function listaModelos(){
+  document.getElementById('tpls').innerHTML = REPORTS.map((r,i)=>`
+    <button class="tpl ${i===atual?'on':''}" onclick="escolher(${i})">
+      <div class="ic">${r.icon}</div>
+      <div><b>${esc(r.name)}</b><small>${esc(r.who)}</small></div>
+      <div class="when">${esc(r.when)}</div>
+    </button>`).join('');
+}
+
+function mostrar(){
+  const r = REPORTS[atual];
+  const d = new Date();
+  const hh = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  document.getElementById('waBody').innerHTML =
+    `<div class="daytag">HOJE</div>
+     <div class="bubble">${waFmt(r.body)}<span class="tm">${hh} <i class="ck">✓✓</i></span></div>`;
+  animarConversa(document.getElementById('waBody'), {repetir:false});
+}
+
+function escolher(i){
+  atual = i;
+  document.querySelectorAll('.tpl').forEach((b,k)=>b.classList.toggle('on',k===i));
+  mostrar();
+}
+
+listaModelos();
+mostrar();
+</script>
+</body>
+</html>

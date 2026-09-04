@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vendas — 77 Gestão · Bellaria</title>
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body data-page="vendas" data-root="../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+mountShell();
+const g = DB.geral;
+
+document.getElementById('app').innerHTML = [
+
+  titleband('COMERCIAL · VENDAS',
+    'Todo pedido que entra,',
+    'já vira indicador.',
+    'Uma venda no ERP atualiza na hora estoque, meta, carteira, financeiro e os alertas do WhatsApp.',
+    ['Tempo real','Mix por categoria','Ticket e margem']),
+
+  kpis([
+    {t:'Faturamento do mês', v:g.faturamentoMes, d:g.faturamentoDelta, dir:'up', s:'melhor agosto da série', c:'good'},
+    {t:'Pedidos emitidos',   v:g.pedidos, d:'+7,1%', dir:'up', s:'79 pedidos só hoje', c:''},
+    {t:'Ticket médio',       v:g.ticket,  d:'+4,9%', dir:'up', s:'mix com mais linha premium', c:'blue'},
+    {t:'Margem bruta',       v:g.margem,  d:'-0,6 p.p.', dir:'down', s:'desconto em revenda pressiona', c:'warn'}
+  ]),
+
+  `<div class="main m-21">
+    ${panel('Faturamento mês a mês','Ano atual × ano anterior — R$ mil',
+      chartBars(DB.faturamentoMes,{height:300, fmt:v=>(v/1000).toFixed(2).replace('.',',')}),
+      {accent:true, legend: legend([['var(--accent)','2025'],['rgba(255,255,255,.18)','2024']])})}
+    <div class="col">
+      ${panel('Faturamento por categoria','Onde o dinheiro entra — R$ mil',
+        chartHBars(DB.categorias.slice(0,5).map(c=>[c[0],c[1]]),{rowH:38,padL:190,height:200}))}
+      ${panel('Top vendedores','Realizado no mês',
+        rankList(DB.vendedores.slice(0,2).map((v,i)=>({
+          n:i+1, l:v[0], s:v[1]+' · meta R$ '+nf(v[3])+' mil',
+          v:'R$ '+nf(v[2])+' mil', p:Math.min(100,Math.round(v[2]/v[3]*100)),
+          c: v[2]/v[3]>=1?'good':v[2]/v[3]>=.9?'warn':'red'
+        })), true))}
+    </div>
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>
