@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Resultado de Obras — 77 Gestão · Vértice</title>
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../css/obra.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#08130e">
+<link rel="apple-touch-icon" href="../../assets/logo-77-symbol-color.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="77 Gestão">
+</head>
+<body data-page="obras" data-root="../../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../../js/ui.js"></script>
+<script src="../js/obra-ui.js"></script>
+<script>
+mountShell();
+const g = DB.geral;
+const obrasRank = DB.obras.slice().sort((a,b)=>b[7]-a[7]);
+document.getElementById('app').innerHTML = [
+
+  titleband('OBRAS · RESULTADO FINANCEIRO',
+    'Cada obra com seu resultado,',
+    'do contrato ao caixa.',
+    'Contrato + aditivos, recebido, a receber, pago e a pagar de cada centro de custo — o que falta executar e quanto sobra.',
+    ['Contrato + aditivo','Recebido × pago','Saldo a executar']),
+
+  kpis([
+    {t:'Contrato + aditivos', v:g.contrato, s:g.obrasAtivas+' obras em andamento', c:''},
+    {t:'Recebido',            v:g.recebido, d:'57,8%', dir:'flat', s:'do valor contratado', c:'good'},
+    {t:'A executar',          v:g.aExecutar, s:'saldo de contrato em carteira', c:'blue'},
+    {t:'Resultado acumulado', v:g.resultado, d:g.margem, dir:'up', s:'recebido + a receber − custos', c:'warn'}
+  ]),
+
+  `<div class="main m-21">
+    ${panel('Resultado por cidade','Receita × custo acumulados — R$ mi',
+      chartBars(DB.cidades,{height:440, fmt:v=>v.toFixed(1).replace('.',',')}),
+      {accent:true, legend: legend([['var(--accent)','Receita'],['rgba(255,255,255,.18)','Custo']])})}
+    <div class="col">
+      ${panel('Ranking de obras','Resultado acumulado',
+        rankList(obrasRank.slice(0,2).map(o=>({
+          l:o[0]+' · '+o[1], s:o[2]+' · '+o[3]+' · físico '+o[6]+'%',
+          v:'R$ '+o[7].toFixed(2).replace('.',',')+' mi', p:Math.round(o[7]/obrasRank[0][7]*100), c:'good'
+        })), true), {cls:''})}
+      ${panel('Obras no vermelho','Custo já passou da receita',
+        rankList(obrasRank.slice(-2).reverse().map(o=>({
+          n:'!', l:o[0]+' · '+o[1], s:o[2]+' · margem '+o[8].toFixed(1).replace('.',',')+'%',
+          v:'R$ '+o[7].toFixed(2).replace('.',',')+' mi', c:o[7]<0?'red':'warn'
+        })), true))}
+    </div>
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

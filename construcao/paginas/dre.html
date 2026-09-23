@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DRE Gerencial — 77 Gestão · Vértice</title>
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../css/obra.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#08130e">
+<link rel="apple-touch-icon" href="../../assets/logo-77-symbol-color.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="77 Gestão">
+</head>
+<body data-page="dre" data-root="../../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../../js/ui.js"></script>
+<script src="../js/obra-ui.js"></script>
+<script>
+mountShell();
+const g = DB.geral;
+const series = [{n:'Margem bruta', c:'#45e594', v:DB.margemMes.map(m=>m[1])}];
+document.getElementById('app').innerHTML = [
+
+  titleband('CONTÁBIL · DRE GERENCIAL',
+    'Da receita da obra',
+    'ao lucro da empresa.',
+    'DRE gerencial do grupo, com os custos rateados por obra e a margem acompanhada mês a mês.',
+    ['DRE por empresa','Rateio por obra','Margem mensal']),
+
+  kpis([
+    {t:'Receita líquida', v:'R$ 138,2 mi', d:'+11,6%', dir:'up', s:'acumulado jan–set', c:''},
+    {t:'Lucro bruto', v:'R$ 26,6 mi', d:'19,2%', dir:'up', s:'da receita líquida', c:'good'},
+    {t:'EBITDA', v:'R$ 16,4 mi', d:'11,9%', dir:'up', s:'antes de juros e depreciação', c:'blue'},
+    {t:'Resultado líquido', v:'R$ 11,7 mi', d:'8,5%', dir:'up', s:'depois de impostos e juros', c:'warn'}
+  ]),
+
+  `<div class="main m-12">
+    ${panel('DRE gerencial','Acumulado jan–set · R$ mi · % da receita líquida',
+      dreTable(DB.dre), {accent:true})}
+    <div class="col">
+      ${panel('Margem bruta mês a mês','% da receita líquida',
+        chartLines(DB.margemMes.map(m=>m[0]), series, {height:200, max:24, suf:'%'}))}
+      ${panel('Receita × custo por empresa','Acumulado — R$ mi',
+        chartBars(DB.empresas,{height:200, fmt:v=>v.toFixed(1).replace('.',',')}),
+        {legend: legend([['var(--accent)','Receita'],['rgba(255,255,255,.18)','Custo']])})}
+    </div>
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

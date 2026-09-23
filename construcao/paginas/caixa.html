@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fluxo de Caixa — 77 Gestão · Vértice</title>
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../css/obra.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#08130e">
+<link rel="apple-touch-icon" href="../../assets/logo-77-symbol-color.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="77 Gestão">
+</head>
+<body data-page="caixa" data-root="../../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../../js/ui.js"></script>
+<script src="../js/obra-ui.js"></script>
+<script>
+mountShell();
+const g = DB.geral;
+document.getElementById('app').innerHTML = [
+
+  titleband('FINANCEIRO · FLUXO DE CAIXA',
+    'Quanto entrou, quanto saiu',
+    'e quanto sobra no banco.',
+    'DFC realizado por grupo do plano de contas, entradas e saídas mês a mês e o saldo acumulado.',
+    ['DFC realizado','Entradas × saídas','Saldo acumulado']),
+
+  kpis([
+    {t:'Entradas no mês', v:'R$ 17,2 mi', d:'+4,9%', dir:'up', s:'recebimento de medições', c:'good'},
+    {t:'Saídas no mês', v:'R$ 15,8 mi', d:'−1,9%', dir:'up', s:'fornecedores, folha e impostos', c:'red'},
+    {t:'Geração de caixa', v:'R$ 1,4 mi', s:'entradas − saídas no mês', c:'blue'},
+    {t:'Saldo em bancos', v:'R$ 16,6 mi', s:'7 contas conciliadas hoje', c:'warn'}
+  ]),
+
+  `<div class="main m-21">
+    ${panel('Entradas × saídas','Mês a mês — R$ mi',
+      chartBars(DB.caixaMes,{height:440, fmt:v=>v.toFixed(1).replace('.',',')}),
+      {accent:true, legend: legend([['var(--accent)','Entradas'],['rgba(255,255,255,.18)','Saídas']])})}
+    <div class="col" style="grid-template-rows:1.9fr 1fr">
+      ${panel('DFC por grupo','R$ mi — mês e acumulado',
+        table(['Grupo','Set','Acum.'], DB.dfc.map(d=>[d[0],d[1],d[2]]), [1,2]), {cls:'tight'})}
+      ${panel('Saldo acumulado','R$ mi no fim de cada mês',
+        chartLine(DB.saldoAcum,{height:170, zero:false}))}
+    </div>
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Faturamento — 77 Gestão · Vértice</title>
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../css/obra.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#08130e">
+<link rel="apple-touch-icon" href="../../assets/logo-77-symbol-color.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="77 Gestão">
+</head>
+<body data-page="faturamento" data-root="../../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../../js/ui.js"></script>
+<script src="../js/obra-ui.js"></script>
+<script>
+mountShell();
+const g = DB.geral;
+document.getElementById('app').innerHTML = [
+
+  titleband('FATURAMENTO · MEDIÇÕES',
+    'Faturado, executado',
+    'e o que ainda falta faturar.',
+    'Comparativo mensal com o ano anterior, composição por tipo de contrato e o executado a faturar por cidade.',
+    ['Período','Público × privado','Exec. a faturar']),
+
+  kpis([
+    {t:'Faturado no mês', v:g.fatMes, d:'+8,7%', dir:'up', s:'contra setembro do ano passado', c:'good'},
+    {t:'Acumulado no ano', v:'R$ 145,9 mi', d:'+10,9%', dir:'up', s:'nove meses', c:''},
+    {t:'Executado a faturar', v:g.execFaturar, s:'medições ainda sem nota', c:'warn'},
+    {t:'Projeção do mês', v:'R$ 21,3 mi', s:'se as medições pendentes saírem', c:'blue'}
+  ]),
+
+  `<div class="main m-21">
+    ${panel('Faturamento mês a mês','2026 × 2025 — R$ mi',
+      chartBars(DB.faturamentoMes,{height:440, fmt:v=>v.toFixed(1).replace('.',',')}),
+      {accent:true, legend: legend([['var(--accent)','2026'],['rgba(255,255,255,.18)','2025']])})}
+    <div class="col">
+      ${panel('Tipo de contrato','Faturado no ano',
+        donut([
+          ['#45e594','Público — R$ 94,8 mi',948],
+          ['#6ea8ff','Privado — R$ 40,9 mi',409],
+          ['#ffc45c','Locação — R$ 10,2 mi',102]
+        ],'65%','PÚBLICO'), {center:true})}
+      ${panel('Faturado por cidade','Setembro — R$ mi',
+        chartHBars(DB.fatCidade.slice(0,4),{rowH:36,padL:170, fmt:v=>v.toFixed(2).replace('.',',')}))}
+    </div>
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

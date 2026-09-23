@@ -51,13 +51,41 @@ A escolha fica salva no aparelho.
 | App II — Representante | `paginas/app2.html` | Carteira, pedido offline, crédito e comissão |
 | Relatório WhatsApp | `paginas/relatorios.html` | 11 modelos de relatório automático |
 
+## Construção Civil (`construcao/`)
+
+Segunda vertical do hub, para **construtoras**, montada no modelo dos painéis
+de obras do Dash TMK — com os principais indicadores de cada grupo. Abra
+`construcao/index.html` (ou o cartão *Construção Civil* na capa do hub).
+
+| Tela | Arquivo | Modelo no Dash TMK | O que mostra |
+|---|---|---|---|
+| Capa | `construcao/index.html` | — | Carteira, resultado e acesso às telas |
+| Resultado de Obras | `construcao/paginas/obras.html` | Obras · Resultado Financeiro | Contrato + aditivo, recebido, a executar, resultado por cidade e obra |
+| Saúde da Obra | `construcao/paginas/saude.html` | Cronograma · Saúde / Avanço | Curva S físico-financeira, frentes críticas, previsão de término |
+| Orçado × Realizado | `construcao/paginas/orcado.html` | Cronograma · Four Box / Orç. × Real. | Four box de eficiência e desvio insumo a insumo |
+| DRE Gerencial | `construcao/paginas/dre.html` | Contábil · DRE | DRE em cascata, margem mensal e receita × custo por empresa |
+| Fluxo de Caixa | `construcao/paginas/caixa.html` | Fluxo de Caixa · DFC / E/S | DFC por grupo, entradas × saídas e saldo acumulado |
+| Faturamento | `construcao/paginas/faturamento.html` | Faturamento | Mês a mês, público × privado, executado a faturar |
+| Aging | `construcao/paginas/aging.html` | Aging | Recebíveis por faixa, por obra e maiores atrasos |
+| Frota | `construcao/paginas/frota.html` | Frota | Horas produtivas × meta, manutenção e OS abertas |
+| Compras | `construcao/paginas/compras.html` | Compras | Gasto por categoria e altas de preço |
+| Comercial | `construcao/paginas/comercial.html` | Comercial · Funil / Contratos | Funil de licitações (leads), conversão e contratos a vencer |
+
+Reaproveita `css/base.css` e `js/ui.js`; o que é próprio de obra fica em
+`construcao/css/obra.css` e `construcao/js/obra-ui.js` (curva S, four box,
+funil, DRE). Todos os números estão em `construcao/js/data.js`.
+
+**Vértice Engenharia é uma empresa fictícia.** Obras, clientes e valores são
+ilustrativos — nenhum dado real da TMK ou de outro cliente.
+
 ## Estrutura
 
 ```
 index.html            capa
 paginas/              uma tela por arquivo
 css/base.css          design system + tema claro
-js/data.js            TODOS os números de demonstração
+js/data.js            TODOS os números de demonstração (distribuidora)
+construcao/           vertical de construção civil (mesma estrutura)
 js/ui.js              gráficos SVG, tabelas, animações
 assets/               logo 77
 ```

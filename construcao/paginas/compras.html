@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Compras — 77 Gestão · Vértice</title>
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../css/obra.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#08130e">
+<link rel="apple-touch-icon" href="../../assets/logo-77-symbol-color.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="77 Gestão">
+</head>
+<body data-page="compras" data-root="../../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../../js/ui.js"></script>
+<script src="../js/obra-ui.js"></script>
+<script>
+mountShell();
+const g = DB.geral;
+document.getElementById('app').innerHTML = [
+
+  titleband('COMPRAS · SUPRIMENTOS',
+    'O que a obra comprou',
+    'e o que ficou mais caro.',
+    'Gasto por categoria, obra e fornecedor — e a alta entre a penúltima e a última compra, pelo quanto custou.',
+    ['Gasto','Preço','Fornecedor']),
+
+  kpis([
+    {t:'Comprado no mês', v:'R$ 9,35 mi', d:'+6,2%', dir:'down', s:'38 obras, 214 fornecedores', c:''},
+    {t:'Impacto das altas', v:'R$ 326 mil', s:'só pelo aumento de preço', c:'red'},
+    {t:'Economia negociada', v:'R$ 286 mil', d:'+12%', dir:'up', s:'cotação com 3+ fornecedores', c:'good'},
+    {t:'Compras emergenciais', v:'8,4%', d:'−2,1 p.p.', dir:'up', s:'do valor comprado', c:'warn'}
+  ]),
+
+  `<div class="main m-12">
+    ${panel('Gasto por categoria','Setembro — R$ mi',
+      chartHBars(DB.comprasCat,{rowH:62,padL:190, fmt:v=>v.toFixed(2).replace('.',',')}), {accent:true})}
+    ${panel('O que subiu','Penúltima × última compra — ordenado pelo impacto',
+      table(['Item','Fornecedor','Penúltima','Última','Alta','Impacto'],
+        DB.altas.map(a=>[a[0],a[1],a[2],a[3],['red',a[4]],a[5]]), [2,3,5]))}
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

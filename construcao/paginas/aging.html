@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aging — 77 Gestão · Vértice</title>
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../css/obra.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#08130e">
+<link rel="apple-touch-icon" href="../../assets/logo-77-symbol-color.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="77 Gestão">
+</head>
+<body data-page="aging" data-root="../../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../../js/ui.js"></script>
+<script src="../js/obra-ui.js"></script>
+<script>
+mountShell();
+const g = DB.geral;
+document.getElementById('app').innerHTML = [
+
+  titleband('AGING · CONTAS A RECEBER',
+    'Medição aprovada',
+    'só vale quando entra no caixa.',
+    'Recebíveis por faixa de atraso, obra a obra, com o executado a faturar ao lado.',
+    ['Vencer / vencido','Por obra e faixa','Maiores atrasos']),
+
+  kpis([
+    {t:'Total a receber', v:g.aReceber, s:'títulos em aberto', c:''},
+    {t:'Vencido', v:g.vencido, d:'13,9%', dir:'down', s:'da carteira a receber', c:'red'},
+    {t:'A vencer em 30 dias', v:'R$ 11,4 mi', s:'previsão de entradas', c:'good'},
+    {t:'Executado a faturar', v:g.execFaturar, s:'ainda sem título emitido', c:'warn'}
+  ]),
+
+  `<div class="main m-21">
+    <div class="col">
+      ${panel('Vencido por faixa de atraso','R$ mil',
+        chartBars(DB.aging.slice(1),{height:190, fmt:v=>nf(v)}), {accent:true})}
+      ${panel('Por obra','A vencer, vencido e executado a faturar',
+        table(['Obra','Cliente','A vencer','Vencido','Exec. a faturar'], DB.agingObras.slice(0,4), [2,3,4]), {cls:'tight'})}
+    </div>
+    <div class="col">
+      ${panel('Composição da carteira','R$ 42,3 mi a receber',
+        donut([
+          ['#45e594','A vencer — R$ 36,4 mi',3644],
+          ['#ffc45c','Vencido até 60d — R$ 3,4 mi',339],
+          ['#ff9d9d','61 a 180d — R$ 1,7 mi',174],
+          ['#ff5a5a','180+ — R$ 0,7 mi',73]
+        ],'13,9%','ESTÁ VENCIDO'), {center:true})}
+      ${panel('Maiores atrasos','Por valor vencido',
+        rankList(DB.devedores.slice(0,2).map((d,i)=>({
+          n:i+1, l:d[0], s:d[1]+' · '+d[2]+' em atraso', v:d[3], p:d[4], c:d[5]
+        })), true))}
+    </div>
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>
