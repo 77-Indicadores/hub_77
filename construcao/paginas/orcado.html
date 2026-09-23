@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Orçado × Realizado — 77 Gestão · Vértice</title>
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../css/obra.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#08130e">
+<link rel="apple-touch-icon" href="../../assets/logo-77-symbol-color.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="77 Gestão">
+</head>
+<body data-page="orcado" data-root="../../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../../js/ui.js"></script>
+<script src="../js/obra-ui.js"></script>
+<script>
+mountShell();
+const g = DB.geral;
+const brl = n => n.toLocaleString('pt-BR',{minimumFractionDigits:n<20?2:0,maximumFractionDigits:n<20?2:0});
+const linhas = DB.insumos.map(([i,u,qo,qr,po,pr])=>{
+  const desvio = qr*pr - qo*po;
+  const dm = (desvio/1000).toLocaleString('pt-BR',{maximumFractionDigits:0});
+  return [i+' ('+u+')', nf(qo), nf(qr), 'R$ '+brl(po), 'R$ '+brl(pr),
+    [desvio>50000?'red':desvio>0?'warn':'good', (desvio>0?'+':'')+'R$ '+dm+' mil']];
+});
+document.getElementById('app').innerHTML = [
+
+  titleband('CRONOGRAMA · ORÇADO × REALIZADO',
+    'Onde a obra gasta',
+    'mais do que avança.',
+    'Four box de eficiência etapa a etapa e o desvio insumo a insumo: quantidade, preço e o que não estava orçado.',
+    ['Four box','Quantidade × preço','Itens não orçados']),
+
+  kpis([
+    {t:'Custo orçado', v:'R$ 356,2 mi', s:'carteira de obras em andamento', c:''},
+    {t:'Custo realizado', v:'R$ 198,7 mi', d:'55,8%', dir:'flat', s:'do orçamento consumido', c:'warn'},
+    {t:'Avanço físico médio', v:'53,1%', d:'−2,7 p.p.', dir:'down', s:'abaixo do consumo', c:'good'},
+    {t:'Itens não orçados', v:'R$ 2,34 mi', s:'212 itens comprados fora da EAP', c:'red'}
+  ]),
+
+  `<div class="main m-12">
+    ${panel('Four box de eficiência','Obra 101 — cada ponto é uma etapa',
+      fourBox(DB.fourBox), {accent:true})}
+    ${panel('Insumo a insumo','Quantidade e preço — orçado × realizado',
+      table(['Insumo','Qtd orç.','Qtd real','Preço orç.','Preço real','Desvio'], linhas, [1,2,3,4]))}
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

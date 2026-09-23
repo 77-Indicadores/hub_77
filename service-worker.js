@@ -1,6 +1,6 @@
 // 77 Gestão — Protótipo Bellaria — cache offline completo
 // Sobe a versão (v2, v3...) sempre que trocar algum arquivo, pra forçar atualização do cache.
-const CACHE = 'hub77-v1';
+const CACHE = 'hub77-v2';
 
 const ASSETS = [
   './',
@@ -22,7 +22,21 @@ const ASSETS = [
   'paginas/positivacao2.html',
   'paginas/produtos.html',
   'paginas/relatorios.html',
-  'paginas/vendas.html'
+  'paginas/vendas.html',
+  'construcao/index.html',
+  'construcao/css/obra.css',
+  'construcao/js/data.js',
+  'construcao/js/obra-ui.js',
+  'construcao/paginas/obras.html',
+  'construcao/paginas/saude.html',
+  'construcao/paginas/orcado.html',
+  'construcao/paginas/dre.html',
+  'construcao/paginas/caixa.html',
+  'construcao/paginas/faturamento.html',
+  'construcao/paginas/aging.html',
+  'construcao/paginas/frota.html',
+  'construcao/paginas/compras.html',
+  'construcao/paginas/comercial.html'
 ];
 
 self.addEventListener('install', event => {

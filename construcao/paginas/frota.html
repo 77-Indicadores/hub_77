@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Frota — 77 Gestão · Vértice</title>
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../css/obra.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#08130e">
+<link rel="apple-touch-icon" href="../../assets/logo-77-symbol-color.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="77 Gestão">
+</head>
+<body data-page="frota" data-root="../../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../../js/ui.js"></script>
+<script src="../js/obra-ui.js"></script>
+<script>
+mountShell();
+const g = DB.geral;
+document.getElementById('app').innerHTML = [
+
+  titleband('FROTA · EQUIPAMENTOS',
+    'Máquina parada',
+    'é obra que não anda.',
+    'Horas produtivas contra a meta de 200 h/mês, motor ligado sem produzir, custo por hora e oficina.',
+    ['Horas produtivas','Ociosidade','Ordens de serviço']),
+
+  kpis([
+    {t:'Horas produtivas / máquina', v:'168 h', d:'meta 200 h', dir:'down', s:'média do mês na frota pesada', c:'warn'},
+    {t:'Custo por hora', v:'R$ 287', d:'+4,1%', dir:'down', s:'diesel + manutenção + pneus', c:''},
+    {t:'Diesel queimado parado', v:'18.400 L', s:'motor ligado sem produzir', c:'red'},
+    {t:'Potencial não faturado', v:'R$ 1,26 mi', s:'horas abaixo da meta × tarifa', c:'blue'}
+  ]),
+
+  `<div class="main m-21">
+    ${panel('Horas por equipamento','Produtivas × motor ligado — setembro',
+      chartBars(DB.frotaHoras,{height:440}),
+      {accent:true, legend: legend([['var(--accent)','Produtivas'],['rgba(255,255,255,.18)','Motor ligado']])})}
+    <div class="col">
+      ${panel('Custo de manutenção','Por família do item — R$ 1,94 mi no ano',
+        donut([
+          ['#ffc45c','Material rodante',612],
+          ['#6ea8ff','Hidráulico',488],
+          ['#ff9d9d','Pneus',431],
+          ['#45e594','Motor e transmissão',409]
+        ],'R$ 1,94 mi','MANUTENÇÃO'), {center:true})}
+      ${panel('Ordens de serviço abertas','Máquina parada na oficina',
+        rankList(DB.os.slice(0,2), true))}
+    </div>
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

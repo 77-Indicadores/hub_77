@@ -67,7 +67,13 @@ document.getElementById('protos').innerHTML = CARDS.map(c=>{
     <p>${c.d}</p>
     <span class="go">Abrir →</span>
   </a>`;
-}).join('');
+}).join('') + `<a class="proto" href="construcao/index.html" style="--g-accent:var(--g-produtos)">
+    <span class="tg">NOVO SETOR</span>
+    <div class="pi">⛏</div>
+    <h3>Construção Civil</h3>
+    <p>Obras, cronograma, DRE, fluxo de caixa, frota e licitações.</p>
+    <span class="go">Abrir →</span>
+  </a>`;
 
 const one = DB.eventos.map(([t,c])=>`<span class="ev"><em class="${c}"></em><b>${t}</b></span>`).join('');
 document.getElementById('ticker').innerHTML = one + one;

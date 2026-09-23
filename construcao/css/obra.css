@@ -1,0 +1,58 @@
+/* =========================================================
+   CONSTRUÇÃO CIVIL — complemento do css/base.css
+   Mesmo canvas 1280 x 720; só troca a marca para âmbar
+   e acrescenta os componentes de obra.
+   ========================================================= */
+
+:root{
+  --g-obra:linear-gradient(135deg,#ffd27a 0%,#f5902a 55%,#d0561a 100%);
+  --g-brand:var(--g-obra);
+}
+
+/* a lista de telas é maior aqui: botões um pouco mais justos */
+.pagenav a{padding:0 9px;font-size:11.5px}
+
+/* capa: 12 cartões em 4 × 3 */
+.proto.volta{border-style:dashed}
+
+/* ---------- funil ---------- */
+.funil{display:grid;gap:3px;flex:1;align-content:center}
+.fn{display:grid;grid-template-columns:1fr 150px;gap:10px;align-items:center}
+.fb{height:21px;border-radius:8px;background:var(--g-accent);display:flex;align-items:center;justify-content:flex-end;
+  padding:0 10px;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.fb b{font-size:13px;font-weight:800;color:#04140d;font-variant-numeric:tabular-nums}
+.fl span{display:block;font-size:12px;font-weight:700}
+.fl span,.fl small{line-height:1.25}
+.fl small{display:block;font-size:10px;color:var(--dim)}
+
+/* ---------- DRE ---------- */
+.dre{width:100%;border-collapse:collapse}
+.dre td{font-size:11.5px;padding:3.5px 9px;border-top:1px solid rgba(255,255,255,.06);color:#cbdcd3;white-space:nowrap}
+.dre td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.dre td.neg{color:#ffa8a8}
+.dre td.pct{color:var(--dim);font-weight:600;width:70px}
+.dre tr.sub td{color:var(--text);font-weight:800;background:rgba(255,255,255,.035)}
+.dre tr.tot td{color:var(--text);font-weight:800;font-size:13px}
+.dre tr.tot td.num:not(.pct){background:var(--g-accent);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* tabela mais justa, quando o painel é baixo */
+.tight .tbl td{padding:3.5px 9px;font-size:11.5px}
+
+/* ---------- frentes de obra ---------- */
+.frentes{display:grid;gap:8px}
+.frh{display:flex;align-items:center;gap:8px}
+.frh b{font-size:12px;font-weight:700}
+.frh small{font-size:10px;color:var(--dim)}
+.frh .pill{margin-left:auto}
+.frbar{position:relative;height:9px;border-radius:5px;background:rgba(255,255,255,.07);margin-top:5px;overflow:hidden}
+.frbar i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.frbar i.pl{background:rgba(183,140,255,.35)}
+.frbar i.rl2{background:var(--g-accent)}
+.frbar i.rl2.red{background:linear-gradient(90deg,#ffb0b0,#d94c4c)}
+.frbar i.rl2.warn{background:linear-gradient(90deg,#ffd996,#e79a1f)}
+
+/* ---------- tema claro ---------- */
+body.claro .dre td{color:#33473d;border-top-color:rgba(12,32,24,.09)}
+body.claro .dre tr.sub td{background:rgba(12,32,24,.04)}
+body.claro .dre td.neg{color:#c23b3b}
+body.claro .frbar{background:rgba(12,32,24,.09)}

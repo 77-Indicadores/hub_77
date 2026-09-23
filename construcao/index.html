@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>77 Gestão — Construção Civil</title>
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="css/obra.css">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#08130e">
+<link rel="apple-touch-icon" href="../assets/logo-77-symbol-color.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="77 Gestão">
+</head>
+<body data-page="capa" data-root="../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+
+  <div class="cover">
+    <div class="covertop">
+      <section class="cvleft">
+        <span class="eyebrow"><i class="dot"></i> PLATAFORMA INTEGRADA PARA CONSTRUTORAS</span>
+        <h1>Toda obra, do edital<br><em>ao resultado.</em></h1>
+        <p>Cronograma, orçado × realizado, faturamento, recebíveis, caixa, DRE,
+           frota, compras e licitações — obra a obra, na mesma base.</p>
+        <div class="cvstats">
+          <div class="cvstat"><small>Carteira contratada</small><b data-count="412.6" data-dec="1" data-pre="R$ " data-suf=" mi">R$ 0</b><span>38 obras em andamento</span></div>
+          <div class="cvstat"><small>Resultado acumulado</small><b data-count="31.8" data-dec="1" data-pre="R$ " data-suf=" mi">R$ 0</b><span>margem de 13,3%</span></div>
+          <div class="cvstat"><small>Faturado no mês</small><b data-count="18.74" data-dec="2" data-pre="R$ " data-suf=" mi">R$ 0</b><span>+8,7% sobre o ano anterior</span></div>
+          <div class="cvstat"><small>Executado a faturar</small><b data-count="6.92" data-dec="2" data-pre="R$ " data-suf=" mi">R$ 0</b><span>medições ainda sem nota</span></div>
+        </div>
+      </section>
+      <section class="protos" id="protos"></section>
+    </div>
+
+    <div class="ticker">
+      <div class="tl"><i class="dot"></i> CANTEIRO AO VIVO</div>
+      <div class="tt"><div class="tm" id="ticker"></div></div>
+    </div>
+  </div>
+</div></div>
+
+<script src="js/data.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+const CARDS = [
+  {id:'obras',      tag:'OBRAS',      ic:'▣',  t:'Resultado de Obras',  d:'Contrato + aditivo, recebido × pago e saldo a executar por obra.'},
+  {id:'saude',      tag:'CRONOGRAMA', ic:'◔',  t:'Saúde da Obra',       d:'Curva S físico-financeira, frentes críticas e previsão de término.'},
+  {id:'orcado',     tag:'CUSTO',      ic:'⊟',  t:'Orçado × Realizado',  d:'Four box de eficiência e desvio insumo a insumo.'},
+  {id:'dre',        tag:'CONTÁBIL',   ic:'Σ',  t:'DRE Gerencial',       d:'Da receita da obra ao lucro, com margem mês a mês.'},
+  {id:'caixa',      tag:'R$',         ic:'⇄',  t:'Fluxo de Caixa',      d:'DFC realizado, entradas × saídas e saldo acumulado.'},
+  {id:'faturamento',tag:'MEDIÇÃO',    ic:'↗',  t:'Faturamento',         d:'Mês a mês, público × privado e executado a faturar.'},
+  {id:'aging',      tag:'RECEBÍVEIS', ic:'⧗',  t:'Aging',               d:'Contas a receber por faixa de atraso e por obra.'},
+  {id:'frota',      tag:'EQUIPAMENTO',ic:'⛟',  t:'Frota',               d:'Horas produtivas × meta, ociosidade e oficina.'},
+  {id:'compras',    tag:'SUPRIMENTO', ic:'▦',  t:'Compras',             d:'Gasto por categoria e o que subiu de preço.'},
+  {id:'comercial',  tag:'LEADS',      ic:'◎',  t:'Comercial',           d:'Funil de licitações, conversão e contratos a vencer.'}
+];
+
+document.getElementById('protos').innerHTML = CARDS.map(c=>{
+  const p = PAGES.find(x=>x.id===c.id);
+  return `<a class="proto" href="../${p.file}" style="--g-accent:var(${p.grad})">
+    <span class="tg">${c.tag}</span>
+    <div class="pi">${c.ic}</div>
+    <h3>${c.t}</h3>
+    <p>${c.d}</p>
+    <span class="go">Abrir →</span>
+  </a>`;
+}).join('') + `<a class="proto volta" href="../index.html" style="--g-accent:var(--g-vendas)">
+    <span class="tg">HUB 77</span>
+    <div class="pi">◆</div>
+    <h3>Voltar ao Hub</h3>
+    <p>Protótipos de distribuição: vendas, positivação, cobrança e apps.</p>
+    <span class="go">Abrir →</span>
+  </a>`;
+
+const one = DB.eventos.map(([t,c])=>`<span class="ev"><em class="${c}"></em><b>${t}</b></span>`).join('');
+document.getElementById('ticker').innerHTML = one + one;
+
+function countUp(el){
+  const target = parseFloat(el.dataset.count);
+  const dec = +(el.dataset.dec||0), pre = el.dataset.pre||'', suf = el.dataset.suf||'';
+  const t0 = performance.now(), dur = 1500;
+  const step = now => {
+    const k = Math.min(1,(now-t0)/dur), e = 1-Math.pow(1-k,3);
+    el.textContent = pre + (target*e).toLocaleString('pt-BR',{minimumFractionDigits:dec,maximumFractionDigits:dec}) + suf;
+    if(k<1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+mountShell();
+document.querySelectorAll('[data-count]').forEach(countUp);
+</script>
+</body>
+</html>

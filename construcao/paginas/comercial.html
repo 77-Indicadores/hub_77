@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Comercial — 77 Gestão · Vértice</title>
+<link rel="stylesheet" href="../../css/base.css">
+<link rel="stylesheet" href="../css/obra.css">
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#08130e">
+<link rel="apple-touch-icon" href="../../assets/logo-77-symbol-color.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="77 Gestão">
+</head>
+<body data-page="comercial" data-root="../../">
+<div class="stage"><div class="canvas">
+  <header class="topbar" id="topo"></header>
+  <nav class="pagenav" id="nav"></nav>
+  <div class="page" id="app"></div>
+</div></div>
+
+<script src="../js/data.js"></script>
+<script src="../../js/ui.js"></script>
+<script src="../js/obra-ui.js"></script>
+<script>
+mountShell();
+const g = DB.geral;
+document.getElementById('app').innerHTML = [
+
+  titleband('COMERCIAL · LICITAÇÕES E CONTRATOS',
+    'Do edital ao contrato,',
+    'sem perder prazo.',
+    'Funil de licitações com taxa de participação e conversão, e os contratos que estão para vencer.',
+    ['Funil de leads','Taxa de conversão','Vencimentos']),
+
+  kpis([
+    {t:'Editais analisados', v:'412', s:'no ano', c:''},
+    {t:'Taxa de participação', v:'30,6%', s:'126 licitações disputadas', c:'blue'},
+    {t:'Taxa de conversão', v:'18,3%', d:'+3,4 p.p.', dir:'up', s:'23 contratos ganhos', c:'good'},
+    {t:'Vencem em 30 dias', v:'2', s:'R$ 7,5 mi de saldo a aditivar', c:'red'}
+  ]),
+
+  `<div class="main m-12">
+    <div class="col" style="grid-template-rows:1.12fr 1fr">
+      ${panel('Funil de licitações (leads do ano)','',
+        funil(DB.funil), {accent:true})}
+      ${panel('O que separa ganhar de perder','Nas 103 disputas perdidas',
+        insights([
+          {tone:'warn', ic:'%', t:'Preço', txt:'Em 61% das derrotas o desconto vencedor passou de 18%.'},
+          {tone:'red', ic:'⚑', t:'Habilitação', txt:'55 inabilitações, quase todas por certidão vencida.'}
+        ]))}
+    </div>
+    ${panel('Contratos a vencer','Alerta 30 dias antes, cobrança a cada 15',
+      table(['Contrato','Cliente','Vencimento','Dias','Saldo','Ação'], DB.vencimentos, [3,4]))}
+  </div>`
+
+].join('');
+</script>
+</body>
+</html>

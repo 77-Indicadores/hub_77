@@ -524,4 +524,7 @@ body.claro .cvfoot b{color:#2c4136}
 body.claro .matriz .cv.C{background:rgba(12,32,24,.08);color:#5b7266}
 body.claro .shot{border-color:rgba(12,32,24,.2);background:rgba(12,32,24,.04);color:#7b9187}
 body.claro .tema:hover{background:#eef6f2}
+body.claro .pagenav a.on{background:var(--g-accent);color:#04140d}
+body.claro .chart rect[fill="rgba(255,255,255,.14)"]{fill:rgba(12,32,24,.16)}
+body.claro .legend i[style*="255,255,255"]{background:rgba(12,32,24,.2)!important}
 /* o celular continua escuro nos dois temas — é a tela do aparelho */
