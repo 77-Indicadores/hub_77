@@ -97,17 +97,17 @@ const DB = {
 
   /* obras: [código, nome, cidade, tipo, contrato R$ mi, recebido %, físico %, resultado R$ mi, margem %] */
   obras:[
-    ['8231','Duplicação Av. das Indústrias','Sorocaba','Público', 48.6, 61, 58, 5.42, 14.8],
-    ['8244','Pavimentação Distrito Norte','Campinas','Público', 36.2, 72, 70, 4.87, 16.1],
-    ['8252','Residencial Parque das Águas','Jundiaí','Privado', 29.8, 48, 51, 3.96, 17.2],
-    ['8260','Centro Logístico Vale Norte','Itu','Privado', 24.9, 83, 86, 3.51, 15.6],
-    ['8266','Recapeamento Anel Viário','Piracicaba','Público', 21.4, 57, 49, 1.02, 6.3],
-    ['8271','Drenagem Córrego do Moinho','Bauru','Público', 17.3, 44, 38, -0.41, -3.1],
-    ['8275','UBS e Creche Jd. Primavera','Campinas','Público', 12.6, 39, 42, 0.88, 9.4],
-    ['8280','Galpão Industrial Rod. 280','Tatuí','Privado', 9.2, 66, 63, -0.18, -2.7]
+    ['101','Duplicação Av. das Indústrias','Sorocaba','Público', 48.6, 61, 58, 5.42, 14.8],
+    ['102','Pavimentação Distrito Norte','Campinas','Público', 36.2, 72, 70, 4.87, 16.1],
+    ['103','Residencial Parque das Águas','Jundiaí','Privado', 29.8, 48, 51, 3.96, 17.2],
+    ['104','Centro Logístico Vale Norte','Itu','Privado', 24.9, 83, 86, 3.51, 15.6],
+    ['105','Recapeamento Anel Viário','Piracicaba','Público', 21.4, 57, 49, 1.02, 6.3],
+    ['106','Drenagem Córrego do Moinho','Bauru','Público', 17.3, 44, 38, -0.41, -3.1],
+    ['107','UBS e Creche Jd. Primavera','Campinas','Público', 12.6, 39, 42, 0.88, 9.4],
+    ['108','Galpão Industrial Rod. 280','Tatuí','Privado', 9.2, 66, 63, -0.18, -2.7]
   ],
 
-  /* ---------- saúde da obra (obra 8231) ---------- */
+  /* ---------- saúde da obra (obra 101) ---------- */
   curvaS:{
     meses:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez','Jan','Fev','Mar'],
     planejado:[3,8,14,21,29,37,45,53,64,74,83,90,95,98,100],
@@ -155,12 +155,12 @@ const DB = {
     ['A vencer',36440],['1–30 d',2210],['31–60 d',1180],['61–90 d',760],['91–180 d',980],['180+ d',730]
   ],
   agingObras:[
-    ['8231 Av. Indústrias','Consórcio Viário Leste','R$ 8,42 mi','R$ 1,64 mi','R$ 1,92 mi'],
-    ['8244 Distrito Norte','Autarquia Municipal de Obras','R$ 6,10 mi','R$ 0,98 mi','R$ 1,21 mi'],
-    ['8266 Anel Viário','Secretaria de Infraestrutura','R$ 4,36 mi','R$ 1,12 mi','R$ 0,84 mi'],
-    ['8271 Córrego do Moinho','Autarquia de Saneamento','R$ 3,05 mi','R$ 0,91 mi','R$ 0,66 mi'],
-    ['8252 Parque das Águas','Incorporadora Horizonte','R$ 5,77 mi','R$ 0,42 mi','R$ 0,58 mi'],
-    ['8260 Vale Norte','Vale Norte Logística','R$ 4,92 mi','R$ 0,21 mi','R$ 0,47 mi']
+    ['101 Av. Indústrias','Consórcio Viário Leste','R$ 8,42 mi','R$ 1,64 mi','R$ 1,92 mi'],
+    ['102 Distrito Norte','Autarquia Municipal de Obras','R$ 6,10 mi','R$ 0,98 mi','R$ 1,21 mi'],
+    ['105 Anel Viário','Secretaria de Infraestrutura','R$ 4,36 mi','R$ 1,12 mi','R$ 0,84 mi'],
+    ['106 Córrego do Moinho','Autarquia de Saneamento','R$ 3,05 mi','R$ 0,91 mi','R$ 0,66 mi'],
+    ['103 Parque das Águas','Incorporadora Horizonte','R$ 5,77 mi','R$ 0,42 mi','R$ 0,58 mi'],
+    ['104 Vale Norte','Vale Norte Logística','R$ 4,92 mi','R$ 0,21 mi','R$ 0,47 mi']
   ],
   devedores:[
     ['Consórcio Viário Leste','medição 07 e 08','62 dias','R$ 1,64 mi',100,'red'],
@@ -243,13 +243,13 @@ const DB = {
 
   /* ---------- ticker da capa ---------- */
   eventos:[
-    ['Medição 09 da obra 8244 aprovada — R$ 1,86 mi','good'],
+    ['Medição 09 da obra 102 aprovada — R$ 1,86 mi','good'],
     ['Contrato 041/2024 vence em 16 dias — aditivo pendente','red'],
     ['CAP 50/70 subiu 7,4% na última compra','warn'],
     ['Escavadeira EC-14 há 23 dias na oficina','red'],
-    ['Obra 8260 atingiu 86% de avanço físico','good'],
+    ['Obra 104 atingiu 86% de avanço físico','good'],
     ['R$ 6,92 mi executados aguardando faturamento','blue'],
     ['Licitação 212/2026 vencida — pavimentação Distrito Sul','good'],
-    ['Drenagem da obra 8231 14 p.p. atrás do planejado','warn']
+    ['Drenagem da obra 101 14 p.p. atrás do planejado','warn']
   ]
 };
