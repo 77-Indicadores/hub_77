@@ -51,6 +51,7 @@ const PAGES = [
   {id:'cobranca',    file:'paginas/cobranca.html',   nav:'Cobrança',          icon:'⚖', grad:'--g-cobranca'},
   {id:'app1',        file:'paginas/app1.html',       nav:'App I',             icon:'⌖', grad:'--g-campo'},
   {id:'app2',        file:'paginas/app2.html',       nav:'App II',            icon:'◧', grad:'--g-app2'},
+  {id:'task77',      file:'paginas/task77.html',     nav:'Task77',            icon:'✓', grad:'--g-task77'},
   {id:'relatorios',  file:'paginas/relatorios.html', nav:'WhatsApp',          icon:'✉', grad:'--g-relatorios'}
 ];
 

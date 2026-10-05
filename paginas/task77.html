@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planejamento Semanal</title>
+
+<style>
+    *{
+        box-sizing:border-box;
+        margin:0;
+        padding:0;
+    }
+
+    body{
+        font-family: "Segoe UI", Arial, sans-serif;
+        background:#eef2f5;
+        color:#24323d;
+        padding:18px;
+    }
+
+    .page{
+        max-width:none;      /* ocupa a tela toda */
+        margin:auto;
+        background:#fff;
+        border-radius:16px;
+        box-shadow:0 12px 40px rgba(20,42,58,.10);
+        overflow:hidden;
+        border:1px solid #dfe7ec;
+    }
+
+    /* TOPO */
+    .topbar{
+        background:linear-gradient(135deg,#0f5874,#0c6a88);
+        padding:16px 22px;
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-end;
+        gap:18px;
+        color:#fff;
+    }
+
+    .topbar h1{
+        font-size:20px;
+        font-weight:650;
+        letter-spacing:.2px;
+        white-space:nowrap;
+    }
+
+    .topbar .periodo{
+        margin-top:4px;
+        font-size:12px;
+        opacity:.85;
+    }
+
+    /* FILTROS NO CABEÇALHO */
+    .header-filters{
+        display:flex;
+        align-items:flex-end;
+        justify-content:flex-end;
+        gap:8px;
+        flex-wrap:wrap;
+        flex:1;
+    }
+
+    .header-filter{
+        display:flex;
+        flex-direction:column;
+        gap:4px;
+        min-width:138px;
+    }
+
+    .header-filter.project{
+        min-width:170px;
+    }
+
+    .header-filter label{
+        font-size:9px;
+        font-weight:700;
+        text-transform:uppercase;
+        letter-spacing:.5px;
+        color:rgba(255,255,255,.78);
+    }
+
+    .header-filter select{
+        height:34px;
+        border:1px solid rgba(255,255,255,.28);
+        background:#fff;
+        color:#314550;
+        border-radius:7px;
+        padding:0 30px 0 9px;
+        font-size:11px;
+        outline:none;
+        cursor:pointer;
+    }
+
+    .header-filter select:focus{
+        border-color:#b9e4f2;
+        box-shadow:0 0 0 3px rgba(255,255,255,.10);
+    }
+
+    .clear-filter{
+        height:34px;
+        border:1px solid rgba(255,255,255,.35);
+        background:rgba(255,255,255,.12);
+        color:#fff;
+        border-radius:7px;
+        padding:0 11px;
+        font-size:11px;
+        font-weight:600;
+        cursor:pointer;
+        white-space:nowrap;
+    }
+
+    .clear-filter:hover{
+        background:rgba(255,255,255,.20);
+    }
+
+    /* BARRA DE AÇÕES */
+    .toolbar{
+        display:flex;
+        align-items:center;
+        gap:8px;
+        flex-wrap:wrap;
+        padding:12px 24px 0;
+    }
+
+    .nav-btn{
+        height:30px;
+        border:1px solid #d7e0e6;
+        background:#fff;
+        color:#4c5e69;
+        border-radius:7px;
+        padding:0 12px;
+        font-size:11px;
+        font-weight:600;
+        cursor:pointer;
+    }
+
+    .nav-btn:hover{ background:#f3f7f9; }
+
+    .nav-btn.primary{
+        background:#0f5874;
+        border-color:#0f5874;
+        color:#fff;
+    }
+
+    .nav-btn.primary:hover{ background:#0c6a88; }
+
+    .source{
+        margin-left:auto;
+        font-size:11px;
+        color:#6f7f8a;
+        background:#eef3f6;
+        border-radius:20px;
+        padding:4px 11px;
+    }
+
+    .source.ok{ background:#e7f4eb; color:#347448; }
+    .source.err{ background:#fce7e2; color:#a94732; }
+
+    /* RESUMO */
+    .summary{
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:14px;
+        padding:14px 24px 4px;
+    }
+
+    .kpi{
+        border:1px solid #e2e9ee;
+        border-radius:12px;
+        padding:11px 14px;
+        background:#fbfcfd;
+        position:relative;
+        overflow:hidden;
+    }
+
+    .kpi:before{
+        content:"";
+        width:4px;
+        height:100%;
+        position:absolute;
+        left:0;
+        top:0;
+        background:#197b9d;
+    }
+
+    .kpi.alert:before{ background:#dc6b4e; }
+    .kpi.ok:before{ background:#44a45c; }
+    .kpi.neutral:before{ background:#6f7f8a; }
+
+    .kpi .label{
+        font-size:11px;
+        text-transform:uppercase;
+        letter-spacing:.6px;
+        color:#6f7f8a;
+        margin-bottom:6px;
+    }
+
+    .kpi .value{
+        font-size:24px;
+        font-weight:700;
+        color:#263a47;
+    }
+
+    .kpi .detail{
+        margin-top:4px;
+        font-size:11px;
+        color:#87959e;
+    }
+
+    .filter-result{
+        margin:8px 24px 0;
+        font-size:11px;
+        color:#71818a;
+        text-align:right;
+    }
+
+    @media(max-width:1100px){
+        .topbar{
+            align-items:flex-start;
+            flex-direction:column;
+        }
+
+        .header-filters{
+            width:100%;
+            justify-content:flex-start;
+        }
+    }
+
+    @media(max-width:700px){
+        .header-filter,
+        .header-filter.project{
+            min-width:calc(50% - 4px);
+            flex:1;
+        }
+
+        .clear-filter{
+            width:100%;
+        }
+    }
+
+    /* BOARD */
+    .board-wrap{
+        padding:12px 24px 22px;
+        overflow-x:auto;
+    }
+
+    .board{
+        display:grid;
+        grid-template-columns:repeat(7,minmax(175px,1fr));
+        gap:12px;
+        min-width:1260px;
+    }
+
+    /* telas largas: aproveita o espaço em vez de deixar margem morta */
+    @media(min-width:1700px){
+        .board{ gap:16px; }
+        .task-title{ font-size:14px; }
+    }
+
+    .column{
+        background:#f7f9fa;
+        border:1px solid #dce5ea;
+        border-radius:13px;
+        min-height:510px;
+        padding:11px;
+    }
+
+    .column.overdue{
+        background:#fff8f6;
+        border-color:#f0c8bd;
+    }
+
+    .column.no-date{
+        background:#f8fafb;
+    }
+
+    .column.today{
+        border-color:#8fc6d9;
+        box-shadow:0 0 0 2px rgba(15,88,116,.12);
+    }
+
+    .column-header{
+        border-bottom:1px solid #dde5e9;
+        padding:4px 4px 12px;
+        margin-bottom:11px;
+        min-height:57px;
+    }
+
+    .day{
+        font-size:14px;
+        font-weight:700;
+        color:#263b47;
+        text-transform:capitalize;
+    }
+
+    .date{
+        margin-top:3px;
+        font-size:11px;
+        color:#7c8992;
+    }
+
+    .column-count{
+        float:right;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        min-width:25px;
+        height:22px;
+        border-radius:20px;
+        background:#e7eef2;
+        color:#52636e;
+        font-size:11px;
+        font-weight:700;
+    }
+
+    .overdue .column-count{
+        background:#f7d9d0;
+        color:#9b4935;
+    }
+
+    .empty{
+        font-size:11px;
+        color:#aab6bd;
+        text-align:center;
+        padding:14px 0;
+    }
+
+    /* TASK CARD */
+    .task{
+        background:#fff;
+        border:1px solid #e1e7eb;
+        border-radius:10px;
+        padding:12px;
+        margin-bottom:9px;
+        box-shadow:0 3px 10px rgba(44,64,77,.045);
+        transition:.2s ease;
+        border-left:4px solid #4aa564;
+    }
+
+    .task[data-id]{ cursor:pointer; }
+
+    .task:hover{
+        transform:translateY(-2px);
+        box-shadow:0 7px 16px rgba(44,64,77,.10);
+    }
+
+    .task[data-id]:hover .task-title{ text-decoration:underline; }
+
+    .task.high{ border-left-color:#d35f46; }
+    .task.medium{ border-left-color:#dd9b32; }
+    .task.low{ border-left-color:#479f62; }
+    .task.done{
+        opacity:.68;
+        border-left-color:#7d8b93;
+    }
+
+    .task-top{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:6px;
+        margin-bottom:8px;
+    }
+
+    .client{
+        font-size:10px;
+        text-transform:uppercase;
+        letter-spacing:.45px;
+        font-weight:700;
+        color:#197797;
+    }
+
+    .priority{
+        font-size:9px;
+        font-weight:700;
+        text-transform:uppercase;
+        border-radius:20px;
+        padding:4px 7px;
+        white-space:nowrap;
+    }
+
+    .priority.high{
+        color:#a94732;
+        background:#fce7e2;
+    }
+
+    .priority.medium{
+        color:#98661c;
+        background:#fff1d7;
+    }
+
+    .priority.low{
+        color:#347448;
+        background:#e7f4eb;
+    }
+
+    .task-title{
+        font-size:13px;
+        line-height:1.38;
+        font-weight:650;
+        color:#2b3c47;
+        margin-bottom:11px;
+    }
+
+    .task-meta{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:6px;
+        font-size:10px;
+        color:#7f8d96;
+    }
+
+    .status{
+        display:flex;
+        align-items:center;
+        gap:5px;
+    }
+
+    .owners{
+        display:flex;
+        align-items:center;
+        gap:5px;
+        flex-wrap:wrap;
+        margin-top:9px;
+        padding-top:9px;
+        border-top:1px dashed #e8eef1;
+        font-size:10px;
+        color:#5d6e78;
+    }
+
+    .owner{
+        display:inline-flex;
+        align-items:center;
+        gap:4px;
+        max-width:100%;
+    }
+
+    .avatar{
+        width:18px;
+        height:18px;
+        border-radius:50%;
+        flex:0 0 auto;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        color:#fff;
+        font-size:8px;
+        font-weight:700;
+        letter-spacing:.2px;
+    }
+
+    .owner-name{
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+    }
+
+    .owners.none{
+        color:#aab6bd;
+        font-style:italic;
+    }
+
+    .dot{
+        width:7px;
+        height:7px;
+        border-radius:50%;
+        background:#4aa564;
+    }
+
+    .dot.waiting{ background:#d59a3b; }
+    .dot.late{ background:#d15f46; }
+    .dot.done{ background:#7a8a93; }
+
+    .check{
+        display:inline-flex;
+        width:18px;
+        height:18px;
+        align-items:center;
+        justify-content:center;
+        border-radius:50%;
+        background:#e7f4eb;
+        color:#3b8b50;
+        font-size:11px;
+        font-weight:bold;
+    }
+
+    .footer-note{
+        border-top:1px solid #e3eaee;
+        background:#fafcfd;
+        padding:13px 24px;
+        font-size:11px;
+        color:#7c8991;
+        display:flex;
+        justify-content:space-between;
+        gap:10px;
+        flex-wrap:wrap;
+    }
+
+    /* DETALHE DA TAREFA */
+    #dlgTask{
+        width:min(620px,94vw);
+        max-height:88vh;
+        padding:0;
+        overflow:hidden;
+    }
+    .td-head{
+        background:linear-gradient(135deg,#0f5874,#0c6a88);
+        color:#fff;
+        padding:16px 20px;
+    }
+    .td-proj{
+        font-size:10px;
+        text-transform:uppercase;
+        letter-spacing:.5px;
+        font-weight:700;
+        opacity:.85;
+    }
+    .td-title{ font-size:17px; font-weight:650; margin-top:4px; line-height:1.3; }
+    .td-body{ padding:16px 20px 20px; overflow-y:auto; max-height:calc(88vh - 150px); }
+    .td-grid{
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+        gap:10px;
+        margin-bottom:16px;
+    }
+    .td-cell{ border:1px solid #e2e9ee; border-radius:9px; padding:8px 10px; background:#fbfcfd; }
+    .td-cell .k{ font-size:9px; text-transform:uppercase; letter-spacing:.5px; color:#8b99a2; }
+    .td-cell .v{ font-size:12px; font-weight:600; margin-top:3px; color:#2b3c47; }
+    .td-sec{ margin-top:16px; }
+    .td-sec h3{
+        font-size:10px;
+        text-transform:uppercase;
+        letter-spacing:.6px;
+        color:#6f7f8a;
+        margin-bottom:7px;
+    }
+    .td-desc{ font-size:12.5px; line-height:1.55; white-space:pre-wrap; color:#3a4a55; }
+    .td-list{ list-style:none; font-size:12.5px; }
+    .td-list li{ padding:5px 0; border-bottom:1px solid #f0f4f6; }
+    .td-list li:last-child{ border-bottom:none; }
+    .td-com-who{ font-weight:600; color:#2b3c47; }
+    .td-com-when{ font-size:10px; color:#9aa6ad; margin-left:5px; }
+    .td-foot{
+        border-top:1px solid #e3eaee;
+        background:#fafcfd;
+        padding:11px 20px;
+        display:flex;
+        gap:8px;
+        justify-content:flex-end;
+        align-items:center;
+    }
+    .td-foot a{ margin-right:auto; font-size:11px; color:#197797; }
+    .td-vazio{ font-size:12px; color:#9aa6ad; font-style:italic; }
+
+    /* MODAL DE CONEXÃO */
+    dialog{
+        border:none;
+        border-radius:12px;
+        padding:22px;
+        width:min(420px,92vw);
+        box-shadow:0 18px 50px rgba(20,42,58,.28);
+        font-family:inherit;
+        color:#24323d;
+    }
+    dialog::backdrop{ background:rgba(16,40,55,.45); }
+    dialog h2{ font-size:16px; margin-bottom:4px; }
+    dialog p{ font-size:12px; color:#7c8991; margin-bottom:14px; }
+    dialog label{
+        display:block;
+        font-size:10px;
+        font-weight:700;
+        text-transform:uppercase;
+        letter-spacing:.5px;
+        color:#6f7f8a;
+        margin:10px 0 4px;
+    }
+    dialog input{
+        width:100%;
+        height:34px;
+        border:1px solid #d7e0e6;
+        border-radius:7px;
+        padding:0 10px;
+        font:inherit;
+        font-size:12px;
+        outline:none;
+    }
+    dialog input:focus{ border-color:#0f5874; }
+    .dialog-actions{
+        display:flex;
+        justify-content:flex-end;
+        gap:8px;
+        margin-top:18px;
+    }
+    .dialog-msg{ font-size:11px; margin-top:10px; color:#a94732; }
+
+    /* IMPRESSÃO */
+    @media print{
+        body{ background:#fff; padding:0; }
+        .page{ box-shadow:none; border:none; }
+        .toolbar, .clear-filter, dialog{ display:none !important; }
+        .board-wrap{ overflow:visible; }
+        .board{ min-width:0; }
+        .task{ box-shadow:none; page-break-inside:avoid; }
+    }
+
+    @media(max-width:800px){
+        body{ padding:10px; }
+        .summary{ grid-template-columns:repeat(2,1fr); }
+        .topbar{ align-items:flex-start; flex-direction:column; }
+    }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+    <div class="topbar">
+        <div class="title-area">
+            <h1>Planejamento Semanal de Tarefas</h1>
+            <div class="periodo" id="periodo">Semana de --/--/---- até --/--/----</div>
+        </div>
+
+        <div class="header-filters">
+            <div class="header-filter">
+                <label for="filterScope">Visão</label>
+                <select id="filterScope">
+                    <option value="all">Equipe toda</option>
+                    <option value="mine">Só minhas</option>
+                </select>
+            </div>
+
+            <div class="header-filter">
+                <label for="filterStatus">Status</label>
+                <select id="filterStatus">
+                    <option value="">Todas</option>
+                    <option value="open">Só pendentes</option>
+                    <option value="done">Só concluídas</option>
+                </select>
+            </div>
+
+            <div class="header-filter">
+                <label for="filterPriority">Prioridade</label>
+                <select id="filterPriority">
+                    <option value="">Todas</option>
+                    <option value="alta">Alta</option>
+                    <option value="media">Média</option>
+                    <option value="baixa">Baixa</option>
+                </select>
+            </div>
+
+            <div class="header-filter project">
+                <label for="filterProject">Projeto</label>
+                <select id="filterProject">
+                    <option value="">Todos os projetos</option>
+                </select>
+            </div>
+
+            <div class="header-filter">
+                <label for="filterOwner">Responsável</label>
+                <select id="filterOwner">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+
+            <button class="clear-filter" id="clearFilters">Limpar</button>
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <button class="nav-btn" id="btnPrev">&lsaquo; Semana anterior</button>
+        <button class="nav-btn" id="btnToday">Semana atual</button>
+        <button class="nav-btn" id="btnNext">Próxima semana &rsaquo;</button>
+        <button class="nav-btn" id="btnConfig">Conectar API</button>
+        <button class="nav-btn primary" id="btnPrint">Imprimir</button>
+        <span class="source" id="source">carregando…</span>
+    </div>
+
+    <div class="summary">
+        <div class="kpi">
+            <div class="label">Tarefas da semana</div>
+            <div class="value" id="kpiTotal">0</div>
+            <div class="detail" id="kpiTotalDet">0 ainda em aberto</div>
+        </div>
+
+        <div class="kpi alert">
+            <div class="label">Atrasadas</div>
+            <div class="value" id="kpiLate">0</div>
+            <div class="detail" id="kpiLateDet">Necessitam atenção</div>
+        </div>
+
+        <div class="kpi ok">
+            <div class="label">Concluídas</div>
+            <div class="value" id="kpiDone">0</div>
+            <div class="detail" id="kpiDoneDet">0% da semana</div>
+        </div>
+
+        <div class="kpi neutral">
+            <div class="label">Sem data</div>
+            <div class="value" id="kpiNoDate">0</div>
+            <div class="detail">Aguardando priorização</div>
+        </div>
+    </div>
+
+    <div class="filter-result" id="filterResult">Exibindo todas as tarefas</div>
+
+    <div class="board-wrap">
+        <div class="board" id="board"></div>
+    </div>
+
+    <div class="footer-note">
+        <span id="footSource">Modelo demonstrativo • dados fictícios</span>
+        <span id="footTime">Atualizado em --/--/----</span>
+    </div>
+
+</div>
+
+<dialog id="dlgTask">
+    <div class="td-head">
+        <div class="td-proj" id="tdProj"></div>
+        <div class="td-title" id="tdTitle">Carregando…</div>
+    </div>
+    <div class="td-body" id="tdBody"></div>
+    <div class="td-foot">
+        <a id="tdLink" href="#" target="_blank" rel="noopener">Abrir o projeto no Task77 ↗</a>
+        <button class="nav-btn primary" id="tdClose">Fechar</button>
+    </div>
+</dialog>
+
+<dialog id="dlg">
+    <h2>Conectar ao Task77</h2>
+    <p>As credenciais ficam só neste navegador. Deixe a URL em branco para voltar ao exemplo.</p>
+    <form method="dialog" id="formConfig">
+        <label for="cfgBase">URL base da API</label>
+        <input id="cfgBase" placeholder="https://task77.77indicadores.com.br/api" autocomplete="off">
+        <label for="cfgEmail">E-mail</label>
+        <input id="cfgEmail" type="email" autocomplete="username">
+        <label for="cfgSenha">Senha</label>
+        <input id="cfgSenha" type="password" autocomplete="current-password">
+        <div class="dialog-msg" id="cfgMsg"></div>
+        <div class="dialog-actions">
+            <button class="nav-btn" value="cancelar" formnovalidate>Cancelar</button>
+            <button class="nav-btn primary" value="entrar">Entrar</button>
+        </div>
+    </form>
+</dialog>
+
+<script>
+/* =========================================================
+   Planejamento semanal — Task77
+   Arquivo único, sem dependências.
+   ========================================================= */
+
+const CFG_KEY = "task77-rel-cfg";
+const DIAS = ["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
+
+/* prioridade da API -> classe/rótulo do modelo */
+const PRI = {
+    urgent: { cls:"high",   rot:"Alta",  val:"alta"  },
+    high:   { cls:"high",   rot:"Alta",  val:"alta"  },
+    medium: { cls:"medium", rot:"Média", val:"media" },
+    low:    { cls:"low",    rot:"Baixa", val:"baixa" },
+    none:   { cls:"low",    rot:"Baixa", val:"baixa" }
+};
+
+let semanaRef = inicioDaSemana(new Date());
+let tarefas = [];
+let usandoExemplo = true;        // dados fictícios vs. API
+let catalogoProjetos = [];       // todos os projetos (/projects)
+let catalogoPessoas  = [];       // todos os usuários (/users)
+let abrirLogin = function(){};   // definido quando o DOM carrega
+let meuId = null;                // id do usuário logado (/auth/me)
+
+/* ---------- datas ---------- */
+function inicioDaSemana(d){                       // segunda-feira
+    const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    x.setDate(x.getDate() - ((x.getDay() + 6) % 7));
+    return x;
+}
+const soData   = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const somaDias = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const br       = d => d.toLocaleDateString("pt-BR");
+const chave    = d => d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+
+function paraData(v){
+    if(!v) return null;
+    const m = String(v).match(/^(\d{4})-(\d{2})-(\d{2})/);   // ISO sem efeito de fuso
+    if(m) return new Date(+m[1], +m[2]-1, +m[3]);
+    const d = new Date(v);
+    return isNaN(d) ? null : soData(d);
+}
+
+function hora(v){
+    if(!v) return "";
+    const m = String(v).match(/T(\d{2}):(\d{2})/);
+    if(!m) return "";
+    const h = m[1] + ":" + m[2];
+    return h === "00:00" ? "" : h;      // prazo só com data, sem horário
+}
+
+/* cor estável a partir do nome, quando a API não manda avatarColor */
+const PALETA = ["#197797","#d35f46","#479f62","#dd9b32","#8b5cf6","#0f5874","#c2410c","#0e7490"];
+function corDoNome(n){
+    let h = 0;
+    for(let i=0;i<n.length;i++) h = (h * 31 + n.charCodeAt(i)) >>> 0;
+    return PALETA[h % PALETA.length];
+}
+
+const iniciais = n => n.trim().split(/\s+/).filter(Boolean).slice(0,2).map(p => p[0]).join("").toUpperCase();
+
+const slug = s => String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+
+/* ---------- API ---------- */
+
+/* Base padrão: "/api" (relativo), conforme a documentação.
+   Funciona direto quando o relatório é servido pelo próprio Task77.
+   Aberto como arquivo (file://) não há origem, então exige configuração. */
+const API_REMOTA = "https://task77.77indicadores.com.br/api";
+const EMAIL_PADRAO = "felipevarella@77indicadores.com.br";
+
+/* O app abre a tarefa em modal dentro do projeto: não há rota /tasks/:id
+   no front, então o link leva à página do projeto onde ela está. */
+function urlDoApp(){
+    const b = cfg().base || "";
+    if(b.indexOf("http") === 0) return b.replace(/\/api\/?$/, "");
+    return location.origin;
+}
+
+/* Servido pelo próprio Task77 -> "/api" (mesma origem, usa a sessão do app).
+   Em qualquer outro lugar -> a API pública, que libera CORS. */
+const BASE_PADRAO = (location.hostname === "task77.77indicadores.com.br")
+    ? "/api"
+    : API_REMOTA;
+
+/* Chaves em que o app costuma guardar o JWT — evita pedir login de novo */
+const CHAVES_TOKEN = ["token","authToken","auth_token","access_token","jwt","task77_token","task77:token"];
+
+/* localStorage pode lançar SecurityError (origem opaca, cookies bloqueados) */
+function store(nome){
+    try { return window[nome]; } catch(e){ return null; }
+}
+
+function tokenDoApp(){
+    for(const k of CHAVES_TOKEN){
+        for(const st of [store("localStorage"), store("sessionStorage")]){
+            if(!st) continue;
+            let v;
+            try { v = st.getItem(k); } catch(e){ continue; }
+            if(!v) continue;
+            v = v.trim();
+            if(v.startsWith("{")){                       // guardado dentro de um objeto
+                try{
+                    const o = JSON.parse(v);
+                    const t = o.token || o.accessToken || o.access_token;
+                    if(t) return String(t);
+                }catch(e){ /* ignora */ }
+                continue;
+            }
+            if(v.split(".").length === 3) return v;      // formato JWT
+        }
+    }
+    return "";
+}
+
+const salvarCfg = c => { const st = store("localStorage"); if(st) try { st.setItem(CFG_KEY, JSON.stringify(c)); } catch(e){} };
+
+function cfg(){
+    let c = {};
+    const st = store("localStorage");
+    try { c = JSON.parse(st && st.getItem(CFG_KEY)) || {}; } catch(e){ c = {}; }
+    if(!c.base)  c.base  = BASE_PADRAO;
+    if(!c.token) c.token = tokenDoApp();
+    return c;
+}
+
+async function api(caminho){
+    const c = cfg();
+    const url = c.base.replace(/\/$/,"") + caminho;
+    const h = {};
+    if(c.token) h.Authorization = "Bearer " + c.token;
+
+    /* A API responde Access-Control-Allow-Origin: *, e o navegador bloqueia
+       requisição com credenciais contra origem curinga. Daí "same-origin". */
+    const r = await fetch(url, { headers: h, credentials: "same-origin" });
+    if(!r.ok) throw new Error("HTTP " + r.status);
+
+    let j = await r.json();
+    if(j && typeof j === "object" && "data" in j) j = j.data;          // envelope { data: ... }
+    if(j && !Array.isArray(j) && Array.isArray(j.tasks)) j = j.tasks;  // /dashboard -> { summary, tasks }
+    return j;
+}
+
+async function login(base, email, password){
+    const r = await fetch(base.replace(/\/$/,"") + "/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+    });
+    const j = await r.json().catch(() => ({}));
+    if(!r.ok){
+        const msg = (j && j.error && j.error.message) || ("HTTP " + r.status);
+        throw new Error("Login falhou: " + msg);
+    }
+    return (j && j.data) ? j.data : j;        // envelope { data: { token, user } }
+}
+
+/* Task da API -> formato do relatório */
+function normalizar(t){
+    const proj = t.project || {};
+    const nomeProj = proj.name || t.projectName || t.project_name || "Sem projeto";
+    const p = PRI[t.priority] || PRI.none;
+
+    /* responsáveis: a API devolve assignees[] com { name, avatarColor } */
+    let brutos = t.assignees || t.responsaveis || (t.assignee ? [t.assignee] : []);
+    if(!Array.isArray(brutos)) brutos = [brutos];
+
+    const responsaveis = brutos
+        .map(a => (typeof a === "string") ? { nome:a, cor:"" } : { nome:a.name || a.nome || "", cor:a.avatarColor || a.cor || "" })
+        .filter(a => a.nome)
+        .map(a => ({ nome:a.nome, cor:a.cor || corDoNome(a.nome), id:slug(a.nome) }));
+
+    return {
+        id: t.id,
+        projetoNumId: t.projectId != null ? t.projectId : (proj.id != null ? proj.id : null),
+        titulo: t.title || "(sem título)",
+        prazo: t.dueDate || t.due_date || null,
+        status: t.status || "todo",
+        progresso: typeof t.progress === "number" ? t.progress : (t.status === "done" ? 100 : 0),
+        pri: p,
+        projeto: nomeProj,
+        projetoId: slug(nomeProj),
+        responsaveis: responsaveis,
+        responsaveisIds: responsaveis.map(a => a.id).join(" "),
+        donosNum: brutos.map(a => a && a.id).filter(x => x != null),
+        hora: hora(t.dueDate || t.due_date)
+    };
+}
+
+async function carregar(){
+    const c = cfg();
+    const src = document.getElementById("source");
+    const foot = document.getElementById("footSource");
+
+    if(!c.base){
+        tarefas = exemplo();
+        usandoExemplo = true;
+        catalogoProjetos = []; catalogoPessoas = [];
+        src.textContent = "dados de exemplo";
+        src.className = "source";
+        foot.textContent = "Modelo demonstrativo • dados fictícios — use “Conectar API”";
+        return;
+    }
+
+    src.textContent = "consultando API…";
+    src.className = "source";
+
+    try{
+        const nomear = (x,i) => ({ id: slug(x.name || x.nome || ("item"+i)), nome: x.name || x.nome || "" });
+
+        /* Quem sou eu — para a visão "só minhas" */
+        try{
+            const me = await api("/auth/me");
+            meuId = me && me.id;
+        }catch(e){ meuId = null; }
+
+        /* Tarefas de TODOS os projetos.
+           O /dashboard só devolve as tarefas do próprio usuário, então
+           não serve para um planejamento de equipe. */
+        const ps = await api("/projects");
+        const projetos = Array.isArray(ps) ? ps : [];
+        catalogoProjetos = projetos.map(nomear).filter(x => x.nome);
+
+        const porProjeto = await Promise.all(projetos.map(async p => {
+            try{
+                const r = await api("/projects/" + p.id + "/tasks?limit=500");
+                const ts = Array.isArray(r) ? r : (r && r.data) || [];
+                return ts.map(t => normalizar(Object.assign({ projectName: p.name }, t)));
+            }catch(e){ return []; }
+        }));
+
+        tarefas = porProjeto.reduce((a,b) => a.concat(b), []);
+        usandoExemplo = false;
+
+        try{
+            const us = await api("/users");
+            catalogoPessoas = (Array.isArray(us) ? us : []).map(nomear).filter(x => x.nome);
+        }catch(e){ catalogoPessoas = []; }
+
+        src.textContent = "API · " + tarefas.length + " tarefas em " + catalogoProjetos.length + " projetos";
+        src.className = "source ok";
+        foot.textContent = "Dados da API Task77 • " + c.base;
+    }catch(e){
+        tarefas = exemplo();
+        usandoExemplo = true;
+        catalogoProjetos = []; catalogoPessoas = [];
+        const naoAutorizado = /HTTP 401|HTTP 403/.test(e.message);
+        src.textContent = naoAutorizado ? "sessão expirada — exemplo" : "API indisponível — exemplo";
+        src.className = "source err";
+        foot.textContent = (naoAutorizado
+            ? "Não autenticado (" + e.message + ") • clique em “Conectar API”"
+            : "Falha ao consultar " + c.base + " (" + e.message + ")") + " • exibindo dados fictícios";
+
+        /* Sessão caiu: abre o login sozinho, para ninguém confundir
+           os dados fictícios com os reais. */
+        if(naoAutorizado) setTimeout(abrirLogin, 300);
+    }
+}
+
+/* ---------- colunas ---------- */
+function montarColunas(){
+    const ini  = semanaRef;
+    const fim  = somaDias(ini, 4);
+    const hoje = soData(new Date());
+
+    const cols = [
+        { cls:"no-date", nome:"Sem data",  sub:"Backlog",            data:null, itens:[] },
+        { cls:"overdue", nome:"Atrasadas", sub:"Prioridade imediata", data:null, itens:[] }
+    ];
+    for(let i=0;i<5;i++){
+        const d = somaDias(ini,i);
+        cols.push({
+            cls: chave(d) === chave(hoje) ? "today" : "",
+            nome: DIAS[d.getDay()],
+            sub: br(d),
+            data: d,
+            itens: []
+        });
+    }
+
+    const visao = document.getElementById("filterScope").value;
+    const base = (visao === "mine" && meuId)
+        ? tarefas.filter(t => t.donosNum.indexOf(meuId) >= 0)
+        : tarefas;
+
+    for(const t of base){
+        const d = paraData(t.prazo);
+        if(!d){ cols[0].itens.push(t); continue; }
+
+        const col = cols.find(c => c.data && chave(c.data) === chave(d));
+        if(col){
+            col.itens.push(t);
+        }else if(d < ini){
+            t.diasAtraso = Math.round((hoje - d) / 86400000);
+            cols[1].itens.push(t);
+        }
+        // depois de sexta: fora desta semana
+    }
+
+    /* Atrasadas primeiro as mais antigas; são centenas, então o quadro
+       mostra as N mais críticas e informa quantas ficaram de fora. */
+    cols[1].itens.sort((a,b) => (b.diasAtraso || 0) - (a.diasAtraso || 0));
+    cols[1].total = cols[1].itens.length;
+
+    return { cols, ini, fim, base };
+}
+
+/* ---------- render ---------- */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function statusTexto(t, atrasada){
+    if(t.status === "done")        return { cls:"done",    txt:"Concluído" };
+    if(atrasada)                   return { cls:"late",    txt:(t.diasAtraso || 1) + (t.diasAtraso === 1 ? " dia" : " dias") };
+    if(t.status === "in_progress") return { cls:"",        txt:"Em andamento" };
+    if(t.progresso > 0)            return { cls:"waiting", txt:"Aguardando" };
+    return { cls:"", txt:"Aberto" };
+}
+
+function cartao(t, atrasada){
+    const feito = t.status === "done";
+    const st = statusTexto(t, atrasada);
+    const canto = feito
+        ? '<span class="check">✓</span>'
+        : '<span class="priority ' + t.pri.cls + '">' + t.pri.rot + '</span>';
+
+    const donos = t.responsaveis.length
+        ? '<div class="owners">' + t.responsaveis.map(a =>
+              '<span class="owner">' +
+                  '<span class="avatar" style="background:' + esc(a.cor) + '">' + esc(iniciais(a.nome)) + '</span>' +
+                  '<span class="owner-name">' + esc(a.nome) + '</span>' +
+              '</span>').join("") + '</div>'
+        : '<div class="owners none">Sem responsável</div>';
+
+    const tag  = "div";
+    const href = ' title="Ver detalhes da tarefa"' +
+                 ' data-id="' + (t.id != null ? t.id : "") + '"' +
+                 ' data-proj-id="' + (t.projetoNumId != null ? t.projetoNumId : "") + '"';
+
+    return '' +
+    '<' + tag + href + ' class="task ' + (feito ? "done" : t.pri.cls) + '"' +
+        ' data-priority="' + t.pri.val + '"' +
+        ' data-project="' + esc(t.projetoId) + '"' +
+        ' data-owner="' + esc(t.responsaveisIds) + '"' +
+        ' data-status="' + (feito ? "done" : "open") + '">' +
+        '<div class="task-top">' +
+            '<span class="client">' + esc(t.projeto) + '</span>' +
+            canto +
+        '</div>' +
+        '<div class="task-title">' + esc(t.titulo) + '</div>' +
+        '<div class="task-meta">' +
+            '<span class="status"><span class="dot ' + st.cls + '"></span>' + esc(st.txt) + '</span>' +
+            '<span>' + esc(t.hora) + '</span>' +
+        '</div>' +
+        donos +
+    '</' + tag + '>';
+}
+
+function preencherFiltros(){
+    /* Começa pelo catálogo completo da API (/projects e /users);
+       completa com o que aparecer nas tarefas, para não faltar nada. */
+    const projetos = catalogoProjetos.slice();
+    const donos    = catalogoPessoas.slice();
+
+    for(const t of tarefas){
+        if(t.projeto && !projetos.some(p => p.id === t.projetoId))
+            projetos.push({ id:t.projetoId, nome:t.projeto });
+        for(const a of t.responsaveis){
+            if(!donos.some(d => d.id === a.id)) donos.push({ id:a.id, nome:a.nome });
+        }
+    }
+    projetos.sort((a,b) => a.nome.localeCompare(b.nome,"pt-BR"));
+    donos.sort((a,b) => a.nome.localeCompare(b.nome,"pt-BR"));
+
+    const selP = document.getElementById("filterProject");
+    const selO = document.getElementById("filterOwner");
+    const antP = selP.value, antO = selO.value;
+
+    selP.innerHTML = '<option value="">Todos os projetos</option>' +
+        projetos.map(p => '<option value="' + esc(p.id) + '">' + esc(p.nome) + "</option>").join("");
+    selO.innerHTML = '<option value="">Todos</option>' +
+        donos.map(d => '<option value="' + esc(d.id) + '">' + esc(d.nome) + "</option>").join("");
+
+    if(projetos.some(p => p.id === antP)) selP.value = antP;
+    if(donos.some(d => d.id === antO))    selO.value = antO;
+}
+
+function render(){
+    const r = montarColunas();
+    const cols = r.cols;
+
+    document.getElementById("periodo").textContent =
+        "Semana de " + br(r.ini) + " até " + br(r.fim);
+
+    document.getElementById("board").innerHTML = cols.map((c,i) =>
+        '<div class="column ' + c.cls + '">' +
+            '<div class="column-header">' +
+                '<span class="column-count">' + (c.total != null ? c.total : c.itens.length) + "</span>" +
+                '<div class="day">' + esc(c.nome) + "</div>" +
+                '<div class="date">' + esc(c.sub) + "</div>" +
+            "</div>" +
+            (c.itens.length
+                ? c.itens.map(t => cartao(t, i === 1)).join("")
+                : '<div class="empty">Nenhuma tarefa</div>') +
+            (c.ocultas ? '<div class="empty">+ ' + c.ocultas + ' atrasadas mais recentes</div>' : "") +
+        "</div>").join("");
+
+    /* KPIs — contados sobre a semana inteira, inclusive o que já foi concluído */
+    const naSemana = r.base.filter(t => {
+        const d = paraData(t.prazo);
+        return d && d >= r.ini && d <= r.fim;
+    });
+    const feitas    = naSemana.filter(t => t.status === "done").length;
+    const atrasadas = cols[1].total != null ? cols[1].total : cols[1].itens.length;
+    const pct       = naSemana.length ? Math.round(feitas / naSemana.length * 100) : 0;
+
+    document.getElementById("kpiTotal").textContent    = naSemana.length;
+    document.getElementById("kpiTotalDet").textContent = (naSemana.length - feitas) + " ainda em aberto";
+    document.getElementById("kpiLate").textContent     = atrasadas;
+    document.getElementById("kpiLateDet").textContent  = atrasadas ? "Necessitam atenção" : "Nada atrasado";
+    document.getElementById("kpiDone").textContent     = feitas;
+    document.getElementById("kpiDoneDet").textContent  = pct + "% da semana";
+    document.getElementById("kpiNoDate").textContent   = cols[0].itens.length;
+
+    document.getElementById("footTime").textContent =
+        "Atualizado em " + new Date().toLocaleDateString("pt-BR") +
+        " às " + new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+
+    preencherFiltros();
+    aplicarFiltros();
+}
+
+/* ---------- filtros ---------- */
+function aplicarFiltros(){
+    const p    = document.getElementById("filterPriority").value;
+    const proj = document.getElementById("filterProject").value;
+    const own  = document.getElementById("filterOwner").value;
+    const st   = document.getElementById("filterStatus").value;
+    const result = document.getElementById("filterResult");
+
+    let visiveis = 0;
+
+    document.querySelectorAll(".task").forEach(task => {
+        const donos = (task.dataset.owner || "").split(" ");
+        const ok = (!p    || task.dataset.priority === p)
+                && (!proj || task.dataset.project  === proj)
+                && (!own  || donos.indexOf(own) >= 0)      // tarefa pode ter vários responsáveis
+                && (!st   || task.dataset.status   === st);
+        task.style.display = ok ? "" : "none";
+        if(ok) visiveis++;
+    });
+
+    document.querySelectorAll(".column").forEach(column => {
+        const n = [...column.querySelectorAll(".task")].filter(t => t.style.display !== "none").length;
+        const badge = column.querySelector(".column-count");
+        if(badge) badge.textContent = n;
+        column.style.opacity = n === 0 ? ".42" : "1";
+    });
+
+    result.textContent = (!p && !proj && !own && !st)
+        ? "Exibindo todas as tarefas"
+        : visiveis + " tarefa" + (visiveis === 1 ? "" : "s") + " encontrada" + (visiveis === 1 ? "" : "s");
+}
+
+/* ---------- dados de exemplo ---------- */
+function exemplo(){
+    const seg = semanaRef;
+    const d = (n,h) => chave(somaDias(seg,n)) + (h ? "T" + h + ":00" : "");
+    const mk = (titulo, prazo, status, pri, projeto, resp) => normalizar({
+        title: titulo,
+        dueDate: prazo,
+        status: status,
+        priority: pri,
+        project: { name: projeto },
+        assignees: resp ? [{ name: resp }] : []
+    });
+
+    return [
+        mk("Validar indicadores do painel de suprimentos", null, "todo", "medium", "TMK Engenharia", "Equipe BI"),
+        mk("Revisar layout da tela de metas em cascata",   null, "todo", "low",    "Brasil Mar",     "Felipe"),
+        mk("Organizar documentação das APIs em uso",       null, "todo", "medium", "Interno",        "Felipe"),
+
+        mk("Reclassificar lançamentos do contas a pagar", d(-2), "todo",        "high",   "RP Engenharia",  "Diego"),
+        mk("Validar carga automática do FTP da manhã",    d(-1), "todo",        "high",   "TMK Engenharia", "Dias"),
+        mk("Retorno sobre configuração inicial do app",   d(-1), "in_progress", "medium", "Polerm",         "Felipe"),
+
+        mk("Limpar casa e revisar indicadores comerciais", d(0,"09:00"), "in_progress", "high",   "Brasil Mar", "Felipe"),
+        mk("Atualizar projeção de vendas do mês",          d(0,"11:30"), "todo",        "medium", "Felipex",    "Felipe"),
+        mk("Reunião rápida de alinhamento da equipe",      d(0,"08:30"), "done",        "low",    "Interno",    "Equipe BI"),
+
+        mk("Montar primeira versão da DRE gerencial", d(1,"10:00"), "todo", "medium", "RP Engenharia", "Diego"),
+        mk("Ajustar filtros do painel de processos",  d(1,"14:00"), "todo", "low",    "Jurídico",      "Luciana"),
+
+        mk("Apresentar evolução do painel financeiro", d(2,"09:30"), "todo", "high",   "TMK Engenharia", "Emerson"),
+        mk("Revisar carteira e próximos vencimentos",  d(2,"16:00"), "todo", "medium", "77 Consultoria", "Felipe"),
+
+        mk("Testar rotina de cobrança automatizada", d(3,"10:30"), "todo", "medium", "Polerm",     "Felipe"),
+        mk("Revisar estrutura das metas mensais",    d(3,"15:00"), "todo", "low",    "Brasil Mar", "Felipe"),
+
+        mk("Fechamento da semana e definição das prioridades", d(4,"16:30"), "todo", "high", "Gestão",  "Felipe"),
+        mk("Organizar pendências para a próxima semana",       d(4,"17:30"), "todo", "low",  "Interno", "Felipe")
+    ];
+}
+
+
+/* ---------- detalhe da tarefa ---------- */
+
+const ST_ROTULO = { todo:"Aberta", in_progress:"Em andamento", done:"Concluída" };
+
+function dataHora(v){
+    if(!v) return "—";
+    const d = new Date(v);
+    if(isNaN(d)) return "—";
+    return d.toLocaleDateString("pt-BR") + " " + d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+}
+
+async function abrirTarefa(id, projId){
+    const dlg = document.getElementById("dlgTask");
+    document.getElementById("tdProj").textContent  = "";
+    document.getElementById("tdTitle").textContent = "Carregando…";
+    document.getElementById("tdBody").innerHTML    = "";
+
+    const link = document.getElementById("tdLink");
+    if(projId){
+        link.href = urlDoApp() + "/projects/" + projId;
+        link.style.display = "";
+    }else{
+        link.style.display = "none";
+    }
+
+    if(!dlg.open) dlg.showModal();
+
+    if(usandoExemplo){
+        document.getElementById("tdTitle").textContent = "Dados de exemplo";
+        document.getElementById("tdBody").innerHTML =
+            '<div class="td-vazio">Conecte-se à API para ver os detalhes reais da tarefa.</div>';
+        return;
+    }
+
+    let t;
+    try{
+        t = await api("/tasks/" + id);
+    }catch(e){
+        document.getElementById("tdTitle").textContent = "Não foi possível carregar";
+        document.getElementById("tdBody").innerHTML =
+            '<div class="td-vazio">' + esc(e.message) + "</div>";
+        return;
+    }
+
+    const pri = PRI[t.priority] || PRI.none;
+    const assn = (t.assignees || []).map(a => a.name).join(", ") || "—";
+    const obs  = (t.observers || []).map(a => a.name).join(", ") || "—";
+
+    document.getElementById("tdProj").textContent  = t.projectName || "";
+    document.getElementById("tdTitle").textContent = t.title || "(sem título)";
+
+    const celula = (k,v) => '<div class="td-cell"><div class="k">' + k + '</div><div class="v">' + v + "</div></div>";
+
+    let html = '<div class="td-grid">' +
+        celula("Status",      esc(ST_ROTULO[t.status] || t.status || "—")) +
+        celula("Prioridade",  esc(pri.rot)) +
+        celula("Progresso",   (t.progress || 0) + "%") +
+        celula("Prazo",       t.dueDate ? esc(paraData(t.dueDate).toLocaleDateString("pt-BR")) : "—") +
+        celula("Responsáveis", esc(assn)) +
+        celula("Observadores", esc(obs)) +
+    "</div>";
+
+    html += '<div class="td-sec"><h3>Descrição</h3>' +
+        (t.description
+            ? '<div class="td-desc">' + esc(t.description) + "</div>"
+            : '<div class="td-vazio">Sem descrição</div>') + "</div>";
+
+    const subs = t.subtasks || [];
+    html += '<div class="td-sec"><h3>Subtarefas (' + subs.length + ")</h3>" +
+        (subs.length
+            ? '<ul class="td-list">' + subs.map(x =>
+                "<li>" + (x.done ? "☑" : "☐") + " " + esc(x.title) + "</li>").join("") + "</ul>"
+            : '<div class="td-vazio">Nenhuma</div>') + "</div>";
+
+    html += '<div class="td-sec"><h3>Comentários</h3><div id="tdComentarios" class="td-vazio">carregando…</div></div>';
+
+    const arqs = t.files || [];
+    if(arqs.length){
+        html += '<div class="td-sec"><h3>Arquivos (' + arqs.length + ")</h3><ul class=\"td-list\">" +
+            arqs.map(f => "<li>" + esc(f.originalName || "arquivo") + "</li>").join("") + "</ul></div>";
+    }
+
+    html += '<div class="td-sec"><h3>Registro</h3><div class="td-desc">Criada em ' +
+        esc(dataHora(t.createdAt)) + " · atualizada em " + esc(dataHora(t.updatedAt)) +
+        " · id " + esc(String(t.id)) + "</div></div>";
+
+    document.getElementById("tdBody").innerHTML = html;
+
+    /* comentários em chamada separada */
+    try{
+        const cs = await api("/tasks/" + id + "/comments?sort=desc");
+        const lista = Array.isArray(cs) ? cs : [];
+        document.getElementById("tdComentarios").outerHTML = lista.length
+            ? '<ul class="td-list">' + lista.map(c =>
+                "<li><span class=\"td-com-who\">" + esc((c.user && c.user.name) || "—") + "</span>" +
+                '<span class="td-com-when">' + esc(dataHora(c.createdAt)) + "</span><br>" +
+                esc(c.content || "") + "</li>").join("") + "</ul>"
+            : '<div class="td-vazio">Nenhum comentário</div>';
+    }catch(e){
+        const el = document.getElementById("tdComentarios");
+        if(el) el.textContent = "não foi possível carregar os comentários";
+    }
+}
+
+/* ---------- eventos ---------- */
+async function atualizar(){ await carregar(); render(); }
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    document.getElementById("btnPrev").onclick  = function(){ semanaRef = somaDias(semanaRef,-7); if(usandoExemplo) tarefas = exemplo(); render(); };
+    document.getElementById("btnNext").onclick  = function(){ semanaRef = somaDias(semanaRef, 7); if(usandoExemplo) tarefas = exemplo(); render(); };
+    document.getElementById("btnToday").onclick = function(){ semanaRef = inicioDaSemana(new Date()); if(usandoExemplo) tarefas = exemplo(); render(); };
+    document.getElementById("btnPrint").onclick = function(){ window.print(); };
+
+    ["filterPriority","filterProject","filterOwner","filterStatus"].forEach(function(id){
+        document.getElementById(id).addEventListener("change", aplicarFiltros);
+    });
+
+    document.getElementById("filterScope").addEventListener("change", render);
+
+    /* clique em qualquer card abre o detalhe */
+    document.getElementById("board").addEventListener("click", function(ev){
+        const card = ev.target.closest(".task[data-id]");
+        if(!card) return;
+        abrirTarefa(card.dataset.id, card.dataset.projId);
+    });
+
+    document.getElementById("tdClose").onclick = function(){ document.getElementById("dlgTask").close(); };
+
+    document.getElementById("clearFilters").addEventListener("click", function(){
+        document.getElementById("filterPriority").value = "";
+        document.getElementById("filterProject").value  = "";
+        document.getElementById("filterOwner").value    = "";
+        document.getElementById("filterStatus").value   = "";
+        aplicarFiltros();
+    });
+
+    const dlg = document.getElementById("dlg");
+    abrirLogin = function(aviso){
+        if(dlg.open) return;
+        const c = cfg();
+        document.getElementById("cfgBase").value  = c.base  || BASE_PADRAO;
+        document.getElementById("cfgEmail").value = c.email || EMAIL_PADRAO;
+        document.getElementById("cfgSenha").value = "";
+        document.getElementById("cfgMsg").style.color = "#a94732";
+        document.getElementById("cfgMsg").textContent = aviso || "";
+        dlg.showModal();
+        document.getElementById("cfgSenha").focus();
+    };
+
+    document.getElementById("btnConfig").onclick = function(){ abrirLogin(); };
+
+    document.getElementById("formConfig").addEventListener("submit", async function(ev){
+        if(ev.submitter && ev.submitter.value !== "entrar") return;   // cancelar
+        ev.preventDefault();
+
+        const base  = document.getElementById("cfgBase").value.trim();
+        const email = document.getElementById("cfgEmail").value.trim();
+        const senha = document.getElementById("cfgSenha").value;
+        const msg   = document.getElementById("cfgMsg");
+
+        if(!base){ const st = store("localStorage"); if(st) try { st.removeItem(CFG_KEY); } catch(e){} dlg.close(); atualizar(); return; }
+
+        msg.style.color = "#6f7f8a";
+        msg.textContent = "conectando…";
+        try{
+            const r = await login(base, email, senha);
+            salvarCfg({ base: base, email: email, token: r.token });
+            dlg.close();
+            atualizar();
+        }catch(e){
+            msg.style.color = "#a94732";
+            msg.textContent = e.message;
+        }
+    });
+
+    atualizar();
+});
+</script>
+
+</body>
+</html>

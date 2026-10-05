@@ -3,8 +3,12 @@
 Conjunto de protótipos navegáveis da plataforma **77 Gestão**, feito para
 apresentação presencial em feira de negócios de beleza.
 
-**Funciona 100% offline.** Sem CDN, sem fonte externa, sem servidor.
+**Os protótipos funcionam 100% offline.** Sem CDN, sem fonte externa, sem servidor.
 Basta abrir `index.html` (duplo clique) — inclusive no tablet.
+
+**Exceção: o Task77 é produto real.** Ele consulta a API em
+`task77.77indicadores.com.br`, então precisa de internet e de login. Na capa ele
+aparece com o selo *Produto real*, para não ser confundido com demonstração.
 
 ## Como apresentar
 
@@ -50,6 +54,7 @@ A escolha fica salva no aparelho.
 | App I — Promotoras | `paginas/app1.html` | Agenda, check-in GPS, checklist, leitor de código |
 | App II — Representante | `paginas/app2.html` | Carteira, pedido offline, crédito e comissão |
 | Relatório WhatsApp | `paginas/relatorios.html` | 11 modelos de relatório automático |
+| **Task77** (real) | `paginas/task77.html` | Planejamento semanal da equipe, com dados ao vivo da API do Task77 |
 
 ## Construção Civil (`construcao/`)
 

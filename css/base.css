@@ -22,6 +22,7 @@
   --g-produtos:linear-gradient(135deg,#ffd27a 0%,#f5a52a 55%,#d4761a 100%);
   --g-financeiro:linear-gradient(135deg,#ff9d9d 0%,#f0577a 55%,#c02f6a 100%);
   --g-campo:linear-gradient(135deg,#7ff0c8 0%,#25c39a 55%,#0e8f8c 100%);
+  --g-task77:linear-gradient(135deg,#7ad7ff 0%,#2b8bff 55%,#1b4fd8 100%);
   --g-relatorios:linear-gradient(135deg,#8dffb8 0%,#25d366 55%,#128c4a 100%);
   --g-cobranca:linear-gradient(135deg,#ffd27a 0%,#f5852a 55%,#d4491a 100%);
   --g-app2:linear-gradient(135deg,#a9d4ff 0%,#3f83f0 55%,#1f4fbe 100%);
@@ -528,3 +529,13 @@ body.claro .pagenav a.on{background:var(--g-accent);color:#04140d}
 body.claro .chart rect[fill="rgba(255,255,255,.14)"]{fill:rgba(12,32,24,.16)}
 body.claro .legend i[style*="255,255,255"]{background:rgba(12,32,24,.2)!important}
 /* o celular continua escuro nos dois temas — é a tela do aparelho */
+
+
+/* Produto real em operação: diferencia dos protótipos de feira */
+.proto.real{border-color:rgba(43,139,255,.45)}
+.proto .selo-real{position:absolute;top:10px;right:11px;display:inline-flex;align-items:center;gap:5px;
+  padding:3px 8px;border-radius:999px;background:rgba(43,139,255,.14);border:1px solid rgba(43,139,255,.45);
+  font-size:9px;font-weight:800;letter-spacing:.09em;color:#9ecbff;text-transform:uppercase}
+.proto .selo-real i{width:5px;height:5px;border-radius:50%;background:#2b8bff;
+  box-shadow:0 0 0 3px rgba(43,139,255,.22);animation:pulsaReal 1.8s ease-in-out infinite}
+@keyframes pulsaReal{50%{opacity:.35}}

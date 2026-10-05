@@ -55,13 +55,15 @@ const CARDS = [
   {id:'cobranca',    tag:'COBRANÇA',    ic:'⚖',  t:'Sistema de Cobrança', d:'Régua automática no WhatsApp, com boleto, PIX e acordo.'},
   {id:'app1',        tag:'APP I',       ic:'⌖',  t:'App de Promotoras',   d:'Agenda, check-in por GPS, checklist e leitor de código.'},
   {id:'app2',        tag:'APP II',      ic:'◧',  t:'App do Representante',d:'Carteira, pedido offline, crédito e comissão no bolso.'},
+  {id:'task77',      tag:'EM OPERAÇÃO', ic:'✓',  t:'Task77',              d:'Planejamento semanal da equipe: tarefas, responsáveis e horas por projeto.', real:true},
   {id:'relatorios',  tag:'AUTOMAÇÃO',   ic:'✉',  t:'Relatório WhatsApp',  d:'11 modelos automáticos, no horário certo, para cada cargo.'}
 ];
 
 document.getElementById('protos').innerHTML = CARDS.map(c=>{
   const p = PAGES.find(x=>x.id===c.id);
-  return `<a class="proto" href="${p.file}" style="--g-accent:var(${p.grad})">
+  return `<a class="proto${c.real ? ' real' : ''}" href="${p.file}" style="--g-accent:var(${p.grad})">
     <span class="tg">${c.tag}</span>
+    ${c.real ? '<span class="selo-real"><i></i>Produto real</span>' : ''}
     <div class="pi">${c.ic}</div>
     <h3>${c.t}</h3>
     <p>${c.d}</p>
